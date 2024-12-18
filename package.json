@@ -32,7 +32,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "prebuild": "shx chmod +x node_modules/.bin/react-scripts && shx chmod +x ./node_modules/react-scripts/scripts/build.js",
+    "vercel-build": "chmod +x node_modules/.bin/react-scripts && chmod +x ./node_modules/react-scripts/scripts/build.js && react-scripts build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
