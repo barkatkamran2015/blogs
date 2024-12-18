@@ -335,7 +335,6 @@ const modules = useMemo(() => ({
   },
 }), []);
 
-
 return (
   <div className="admin-dashboard">
     <h2>Admin Dashboard</h2>
@@ -381,41 +380,55 @@ return (
         <img src={imageURL} alt="Uploaded" className="uploaded-image" />
       )}
 
-      {/* Rich Text Editor */}
-      <ReactQuill
-  ref={quillRef} // Attach reference for further customization if needed
-  value={content} // Controlled value for the editor
-  onChange={setContent} // Handle editor content changes
-  theme="snow" // Use the "snow" theme
-  modules={modules} // Pass the toolbar configuration
-  className="quill-editor" // Custom styles for the editor
-/>
-      {/* Page Selection */}
-      <label htmlFor="page-select" className="form-label">Select Page:</label>
-      <select
-        id="page-select"
-        value={selectedPage}
-        onChange={(e) => setSelectedPage(e.target.value)}
-        className="page-select"
-      >
-        <option value="Blog">Blog</option>
-        <option value="Products Review">Products Review</option>
-        <option value="Recipe">Recipe</option>
-      </select>
+     {/* Rich Text Editor */}
+<div className="editor-container">
+  <label htmlFor="rich-editor" className="form-label">
+    Write Content:
+  </label>
+  <ReactQuill
+    ref={quillRef}
+    value={content}
+    onChange={setContent}
+    theme="snow"
+    modules={modules}
+    className="quill-editor"
+  />
+</div>
 
-      {/* Theme Background Color Selection */}
-      <label htmlFor="theme-select" className="form-label">Select Background Theme:</label>
-      <select
-        id="theme-select"
-        onChange={(e) => applyTheme(e.target.value)}
-        className="page-select"
-      >
-        <option value="#ffffff">Default</option>
-        <option value="#e0f7fa">Blue</option>
-        <option value="#e8f5e9">Green</option>
-        <option value="#eceff1">Gray</option>
-        <option value="#ff5733">Orange</option>
-      </select>
+{/* Page Selection */}
+<div className="form-group page-select-group">
+  <label htmlFor="page-select" className="form-label">
+    Select Page:
+  </label>
+  <select
+    id="page-select"
+    value={selectedPage}
+    onChange={(e) => setSelectedPage(e.target.value)}
+    className="page-select"
+  >
+    <option value="Blog">Blog</option>
+    <option value="Products Review">Products Review</option>
+    <option value="Recipe">Recipe</option>
+  </select>
+</div>
+
+{/* Theme Background Color Selection */}
+<div className="form-group theme-select-group">
+  <label htmlFor="theme-select" className="form-label">
+    Select Background Theme:
+  </label>
+  <select
+    id="theme-select"
+    onChange={(e) => applyTheme(e.target.value)}
+    className="page-select"
+  >
+    <option value="#ffffff">Default</option>
+    <option value="#e0f7fa">Blue</option>
+    <option value="#e8f5e9">Green</option>
+    <option value="#eceff1">Gray</option>
+    <option value="#ff5733">Orange</option>
+  </select>
+</div>
 
       {/* Submit Button */}
       <button type="submit" className="submit-button">
