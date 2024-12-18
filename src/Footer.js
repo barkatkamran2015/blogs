@@ -9,7 +9,11 @@ export default function Footer() {
       <div className="footer-content">
         <div className="footer-section about">
           <h2>About Us</h2>
-          <p>Your go-to resource for fun activities and delicious recipes. Our goal is to make your family life happier and more engaging.</p>
+          <p>Welcome to our space! Moms from all around the world, let’s come
+together to share our experiences, support one another, and dive into
+the beautiful journey of motherhood. Whether you're an immigrant mom
+or a mom from any corner of the globe, this blog is a place for all of
+us to connect, learn, and grow together.</p>
         </div>
         <div className="footer-section links">
           <h2>Quick Links</h2>
