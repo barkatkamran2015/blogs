@@ -1,0 +1,135 @@
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+/* Blog Page Wrapper */
+.blog-page {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center all content */
+}
+
+/* Search Bar Container */
+.blog-page__search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 80px;
+  margin-left: 600px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Blog Content Grid */
+.blog-page__content-wrapper {
+  width: 100%;
+}
+
+.blog-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+  gap: 20px;
+  justify-content: center;
+  align-items: start;
+}
+
+/* Blog Card */
+.blog-page__card {
+  background-color: #fafafa;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blog-page__card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Blog Title */
+.blog-page__title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* Blog Content */
+.blog-page__content {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Blog Image */
+.blog-page__image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-top: 10px;
+}
+
+/* Messages */
+.blog-page__loading-message,
+.blog-page__error-message,
+.blog-page__no-posts-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+  margin: 20px 0;
+}
+
+.blog-page__error-message {
+  color: red;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .blog-page__search-container {
+    margin: 20px 0;
+  }
+
+  .blog-page__title {
+    font-size: 1.3rem;
+  }
+
+  .blog-page__content {
+    font-size: 0.95rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .blog-page {
+    padding: 10px;
+    margin-top: 20px;
+  }
+
+  .blog-page__search-container {
+    margin: -5px auto 50px;
+    margin-left: 50px;
+  }
+
+  .blog-page__title {
+    font-size: 1.2rem;
+  }
+
+  .blog-page__content {
+    font-size: 0.9rem;
+  }
+}
