@@ -18,10 +18,9 @@ body {
 /* Search Bar Container */
 .recipe-page__search-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: right;
   margin-top: 80px;
-  margin-left: 300px;
+  margin-left: 150px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -48,7 +47,6 @@ body {
 /* Grid Layout for Cards */
 .recipe-page__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   justify-content: center;
   align-items: start;
