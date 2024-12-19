@@ -28,7 +28,7 @@
   margin-bottom: 10px;
   text-transform: uppercase;
   font-weight: bold;
-  color: azure;
+  color: #0b9299;
 }
 
 .footer-section p, .footer-section ul {
@@ -53,24 +53,24 @@
 }
 
 .footer-section ul li a {
-  color: #ecf0f1; /* Light text for links */
+  color: #0b9299; /* Light text for links */
   text-decoration: none;
   transition: color 0.3s;
 }
 
 .footer-section ul li a:hover {
-  color: #f39c12; /* Hover effect matches title color */
+  color: azure; /* Hover effect matches title color */
 }
 
 .social-icons a {
-  color: #ecf0f1;
+  color: #0b9299;
   font-size: 1.5rem; /* Slightly larger icons for visibility */
   margin-right: 15px; /* More space between icons */
   transition: color 0.3s;
 }
 
 .social-icons a:hover {
-  color: #f39c12; /* Hover effect for social icons */
+  color: azure; /* Hover effect for social icons */
 }
 
 .footer-bottom {
