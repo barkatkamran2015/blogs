@@ -159,6 +159,7 @@ h2 {
 .post-content {
   flex: 1;
   display: flex;
+  text-align: inherit;
   flex-direction: column;
   gap: 10px;
 }
@@ -332,6 +333,19 @@ h2 {
 .ql-size-36px { font-size: 36px; }
 .ql-size-48px { font-size: 48px; }
 .ql-size-72px { font-size: 72px; }
+
+.ql-align-left {
+  text-align: left;
+}
+.ql-align-center {
+  text-align: center;
+}
+.ql-align-right {
+  text-align: right;
+}
+.ql-align-justify {
+  text-align: justify;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
