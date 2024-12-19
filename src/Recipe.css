@@ -73,7 +73,6 @@ body {
   font-size: 1.5rem;
   color: #333;
   margin-bottom: 10px;
-  text-align: center;
 }
 
 /* Content */
@@ -82,7 +81,6 @@ body {
   color: #555;
   line-height: 1.6;
   margin-bottom: 15px;
-  text-align: center;
 }
 
 /* Image */
@@ -129,13 +127,14 @@ body {
   }
 
   .recipe-page__search-container {
-    margin: -5px auto 50px;
-    margin-left: 50px;
+    margin: -10px 40px 20px;
+    justify-content: center;
   }
 
   .recipe-page__search-input {
     padding: 8px;
     font-size: 0.9rem;
+
   }
 
   .recipe-page__title {
@@ -148,5 +147,6 @@ body {
 
   .recipe-page__card {
     padding: 10px;
+    margin-top: 20px;
   }
 }
