@@ -116,29 +116,31 @@ const AdminDashboard = () => {
       setError('No file selected');
       return;
     }
-
+  
     const formData = new FormData();
     formData.append('file', file);
-
+  
     try {
       setIsLoading(true);
-      const response = await fetch('https://api-ss5e.onrender.com/api/upload', {
+      const response = await fetch(`${API_URL}?method=UPLOAD`, {
         method: 'POST',
         body: formData,
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to upload image');
       }
-
+  
       const responseData = await response.json();
-      const baseURL = 'https://barkatkamran.com';
+      console.log('Image Upload Response:', responseData);
+  
+      // Construct the correct URL using your backend base URL
       const uploadedImageURL = responseData.imageUrl.startsWith('http')
         ? responseData.imageUrl
-        : `${baseURL}${responseData.imageUrl}`;
-
+        : `${API_URL.replace('/db.php', '')}${responseData.imageUrl}`;
+  
       console.log('Uploaded Image URL:', uploadedImageURL);
-
+  
       if (insertIntoEditor) {
         const editor = quillRef.current?.getEditor();
         if (editor) {
@@ -148,8 +150,8 @@ const AdminDashboard = () => {
           editor.setSelection(range.index + 1);
         }
       }
-      setImageURL(uploadedImageURL); // Always update imageURL      
-
+  
+      setImageURL(uploadedImageURL); // Save the uploaded image URL
       setError('');
     } catch (err) {
       console.error('Error uploading image:', err);
@@ -158,6 +160,7 @@ const AdminDashboard = () => {
       setIsLoading(false);
     }
   };
+  
 
  // Persist image dimensions and positioning styles for resizing
  const persistImageDimensions = (content) => {
