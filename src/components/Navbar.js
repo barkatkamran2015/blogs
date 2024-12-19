@@ -68,7 +68,67 @@ const Navbar = () => {
           </Link>
         </Typography>
 
-        {/* Hamburger Menu */}
+        {/* Desktop Menu */}
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
+          {menuItems.map((menu, index) => (
+            <Button
+              key={index}
+              sx={{
+                color: 'white',
+                fontWeight: 'bold',
+                textTransform: 'none',
+                '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+              }}
+              component={Link}
+              to={menu.path}
+            >
+              {menu.label}
+            </Button>
+          ))}
+          {!user ? (
+            <>
+              <Button
+                sx={{
+                  color: 'white',
+                  fontWeight: 'bold',
+                  textTransform: 'none',
+                  '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+                }}
+                component={Link}
+                to="/login"
+              >
+                Login
+              </Button>
+              <Button
+                sx={{
+                  backgroundColor: '#FFD700',
+                  color: '#6A5ACD',
+                  fontWeight: 'bold',
+                  textTransform: 'none',
+                  '&:hover': { backgroundColor: '#E5C300' },
+                }}
+                component={Link}
+                to="/signup"
+              >
+                Sign Up
+              </Button>
+            </>
+          ) : (
+            <Button
+              sx={{
+                color: 'white',
+                fontWeight: 'bold',
+                textTransform: 'none',
+                '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+              }}
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          )}
+        </Box>
+
+        {/* Hamburger Menu (Mobile) */}
         <IconButton
           edge="end"
           color="inherit"
@@ -124,77 +184,77 @@ const Navbar = () => {
           </Box>
 
           {/* Sign Up and Login Buttons */}
-          {/* Sign Up and Login Buttons */}
-<Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
-  {!user ? (
-    <>
-      <Button
-        variant="contained"
-        sx={{
-          backgroundColor: '#FFD700',
-          color: '#6A5ACD',
-          textTransform: 'none',
-          fontWeight: 'bold',
-          maxWidth: '300px', // Limit the width of the button
-          width: '100%',
-          margin: '0 auto', // Center the button
-          '&:hover': {
-            backgroundColor: '#E5C300',
-          },
-        }}
-        component={Link}
-        to="/signup"
-        onClick={toggleDrawer(false)}
-      >
-        Sign Up
-      </Button>
-      <Button
-        variant="outlined"
-        sx={{
-          color: '#FFD700',
-          borderColor: '#FFD700',
-          textTransform: 'none',
-          fontWeight: 'bold',
-          maxWidth: '300px', // Limit the width of the button
-          width: '100%',
-          margin: '0 auto', // Center the button
-          '&:hover': {
-            backgroundColor: '#E5C300',
-            borderColor: '#E5C300',
-          },
-        }}
-        component={Link}
-        to="/login"
-        onClick={toggleDrawer(false)}
-      >
-        Log In
-      </Button>
-    </>
-  ) : (
-    <Button
-      variant="outlined"
-      sx={{
-        color: '#FFD700',
-        borderColor: '#FFD700',
-        textTransform: 'none',
-        fontWeight: 'bold',
-        maxWidth: '300px', // Limit the width of the button
-        width: '100%',
-        margin: '0 auto', // Center the button
-        '&:hover': {
-          backgroundColor: '#E5C300',
-          borderColor: '#E5C300',
-        },
-      }}
-      onClick={() => {
-        handleLogout();
-        toggleDrawer(false);
-      }}
-    >
-      Logout
-    </Button>
-  )}
-</Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+            {!user ? (
+              <>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: '#FFD700',
+                    color: '#6A5ACD',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    maxWidth: '300px',
+                    width: '100%',
+                    margin: '0 auto',
+                    '&:hover': {
+                      backgroundColor: '#E5C300',
+                    },
+                  }}
+                  component={Link}
+                  to="/signup"
+                  onClick={toggleDrawer(false)}
+                >
+                  Sign Up
+                </Button>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    color: '#FFD700',
+                    borderColor: '#FFD700',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    maxWidth: '300px',
+                    width: '100%',
+                    margin: '0 auto',
+                    '&:hover': {
+                      backgroundColor: '#E5C300',
+                      borderColor: '#E5C300',
+                    },
+                  }}
+                  component={Link}
+                  to="/login"
+                  onClick={toggleDrawer(false)}
+                >
+                  Log In
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="outlined"
+                sx={{
+                  color: '#FFD700',
+                  borderColor: '#FFD700',
+                  textTransform: 'none',
+                  fontWeight: 'bold',
+                  maxWidth: '300px',
+                  width: '100%',
+                  margin: '0 auto',
+                  '&:hover': {
+                    backgroundColor: '#E5C300',
+                    borderColor: '#E5C300',
+                  },
+                }}
+                onClick={() => {
+                  handleLogout();
+                  toggleDrawer(false);
+                }}
+              >
+                Logout
+              </Button>
+            )}
+          </Box>
+
           <Divider sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.2)' }} />
 
           {/* Menu Items */}
@@ -209,7 +269,7 @@ const Navbar = () => {
                 sx={{
                   textDecoration: 'none',
                   color: 'white',
-                  padding: '12px 32px', // Adjusted padding to move items to the right
+                  padding: '12px 32px',
                   '&:hover': {
                     backgroundColor: 'rgba(255, 255, 255, 0.2)',
                   },
