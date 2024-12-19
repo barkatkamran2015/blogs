@@ -42,9 +42,9 @@ Quill.register(Size, true);
  // Helper Component: PostContent
  const PostContent = ({ content }) => {
   const sanitizedContent = DOMPurify.sanitize(content, {
-    ALLOWED_TAGS: ['img', 'p', 'div', 'span', 'br', 'strong', 'em', 'a', 'h3', 'h4', 'h5', 'h6'],
-    ALLOWED_ATTR: ['src', 'width', 'height', 'alt', 'style'],
-  });
+    ALLOWED_TAGS: ['img', 'p', 'div', 'span', 'br', 'strong', 'em', 'a', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li'],
+    ALLOWED_ATTR: ['src', 'width', 'height', 'alt', 'style', 'class', 'align'],
+  });  
 
   const parser = new DOMParser();
   const doc = parser.parseFromString(sanitizedContent, 'text/html');
@@ -191,7 +191,7 @@ const handlePostSubmission = async (e) => {
   if (!content) {
     setError('Content is required');
     return;
-  }
+}
 
   try {
     setIsLoading(true);
@@ -200,10 +200,10 @@ const handlePostSubmission = async (e) => {
 
     // 2. Process and sanitize content
     const processedContent = persistImageDimensions(content); // Ensure images retain dimensions
-    const sanitizedContent = DOMPurify.sanitize(processedContent, {
-      ALLOWED_TAGS: ['img', 'p', 'div', 'span', 'br', 'strong', 'em', 'a', 'h3', 'h4', 'h5', 'h6'],
-      ALLOWED_ATTR: ['src', 'width', 'height', 'alt', 'style'], // Allow styles for positioning (e.g., float, margins)
-    });
+    const sanitizedContent = DOMPurify.sanitize(content, {
+      ALLOWED_TAGS: ['img', 'p', 'div', 'span', 'br', 'strong', 'em', 'a', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li'],
+      ALLOWED_ATTR: ['src', 'width', 'height', 'alt', 'style', 'class', 'align'],
+    });    
 
     // 3. Prepare payload for the server
     const requestBody = {
