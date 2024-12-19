@@ -83,7 +83,7 @@ const SignUp = () => {
       </form>
       
       <Box sx={{ marginTop: 2 }}>
-        <Typography variant="body2">Already have an account? <Button onClick={() => navigate('/signin')}>Sign In</Button></Typography>
+        <Typography variant="body2">Already have an account? <Button onClick={() => navigate('/login')}>Sign In</Button></Typography>
       </Box>
     </Box>
   );
