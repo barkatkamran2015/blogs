@@ -188,8 +188,8 @@ const handlePostSubmission = async (e) => {
   e.preventDefault();
 
   // 1. Validation: Ensure title and content are provided
-  if (!title || !content) {
-    setError('Title and content are required');
+  if (!content) {
+    setError('Content is required');
     return;
   }
 
