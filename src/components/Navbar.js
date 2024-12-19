@@ -2,8 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { auth } from '../Admin/firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { Link } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, Box, IconButton, Drawer, List, ListItem, ListItemText } from '@mui/material';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Box,
+  Divider,
+  Button,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import imageLogo from '../assets/logo1.png';
 
 const Navbar = () => {
@@ -35,100 +48,183 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="sticky" style={{ backgroundColor: '#0b9299' }}> {/* Change color here */}
+    <AppBar position="sticky" sx={{ backgroundColor: '#0b9299' }}>
       <Toolbar>
         {/* Logo */}
-        <Typography 
-  variant="h6" 
-  style={{ flexGrow: 1, display: 'flex', alignItems: 'center' }} // Align items vertically
->
-  <Link to="/" style={{ textDecoration: 'none' }}>
-    <img 
-      src={imageLogo} 
-      alt="Classy Mama Logo" 
-      style={{ 
-        height: '60px', 
-        objectFit: 'contain', 
-        marginTop: '8px' /* Moves logo down without changing navbar height */
-      }} 
-    />
-  </Link>
-</Typography>
-
-        {/* Desktop Menu */}
-        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-          {menuItems.map((menu, index) => (
-            <Button 
-              key={index} 
-              sx={{ 
-                color: 'white', 
-                margin: '0 8px', 
-                fontWeight: 'bold',
-                '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' }
+        <Typography
+          variant="h6"
+          sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}
+        >
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <img
+              src={imageLogo}
+              alt="Classy Mama Logo"
+              style={{
+                height: '60px',
+                objectFit: 'contain',
+                marginTop: '8px',
               }}
-            >
-              <Link to={menu.path} style={{ textDecoration: 'none', color: 'inherit' }}>
-                {menu.label}
-              </Link>
-            </Button>
-          ))}
-          {!user ? (
-            <>
-              <Button sx={{ color: 'white', fontWeight: 'bold' }}>
-                <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>Login</Link>
-              </Button>
-              <Button sx={{ backgroundColor: '#FFD700', color: '#6A5ACD', fontWeight: 'bold', marginLeft: 1 }}>
-                <Link to="/signup" style={{ textDecoration: 'none', color: 'inherit' }}>Signup</Link>
-              </Button>
-            </>
-          ) : (
-            <Button onClick={handleLogout} sx={{ color: 'white', fontWeight: 'bold' }}>
-              Logout
-            </Button>
-          )}
-        </Box>
+            />
+          </Link>
+        </Typography>
 
         {/* Hamburger Menu */}
-        <IconButton 
-          edge="end" 
-          color="inherit" 
-          sx={{ display: { xs: 'block', md: 'none' } }} 
+        <IconButton
+          edge="end"
+          color="inherit"
+          sx={{
+            display: { xs: 'block', md: 'none' },
+            border: '2px solid white',
+            borderRadius: '50%',
+            padding: '8px',
+            width: '50px',
+            height: '50px',
+          }}
           onClick={toggleDrawer(true)}
         >
-          <MenuIcon />
+          <MenuIcon sx={{ fontSize: '24px' }} />
         </IconButton>
 
         {/* Mobile Drawer */}
-        <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
-          <Box sx={{ width: 250 }} onClick={toggleDrawer(false)}>
-            <List>
-              {menuItems.map((menu, index) => (
-                <ListItem button key={index}>
-                  <Link to={menu.path} style={{ textDecoration: 'none', color: 'black' }}>
-                    <ListItemText primary={menu.label} />
-                  </Link>
-                </ListItem>
-              ))}
-              {!user ? (
-                <>
-                  <ListItem button>
-                    <Link to="/login" style={{ textDecoration: 'none', color: 'black' }}>
-                      <ListItemText primary="Login" />
-                    </Link>
-                  </ListItem>
-                  <ListItem button>
-                    <Link to="/signup" style={{ textDecoration: 'none', color: 'black' }}>
-                      <ListItemText primary="Signup" />
-                    </Link>
-                  </ListItem>
-                </>
-              ) : (
-                <ListItem button onClick={handleLogout}>
-                  <ListItemText primary="Logout" />
-                </ListItem>
-              )}
-            </List>
+        <Drawer
+          anchor="right"
+          open={drawerOpen}
+          onClose={toggleDrawer(false)}
+          sx={{
+            '& .MuiDrawer-paper': {
+              width: '100vw',
+              height: '100vh',
+              background: 'linear-gradient(180deg, #0b9299, #005f63)',
+              color: 'white',
+              padding: '16px',
+            },
+          }}
+        >
+          {/* Drawer Header */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+              paddingBottom: '16px',
+            }}
+          >
+            {/* Logo aligned to the left */}
+            <Box sx={{ flexGrow: 1 }}>
+              <img
+                src={imageLogo}
+                alt="Classy Mama Logo"
+                style={{ height: '40px', objectFit: 'contain', marginLeft: '15px' }}
+              />
+            </Box>
+            <IconButton onClick={toggleDrawer(false)} sx={{ color: 'white' }}>
+              <CloseIcon />
+            </IconButton>
           </Box>
+
+          {/* Sign Up and Login Buttons */}
+          {/* Sign Up and Login Buttons */}
+<Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+  {!user ? (
+    <>
+      <Button
+        variant="contained"
+        sx={{
+          backgroundColor: '#FFD700',
+          color: '#6A5ACD',
+          textTransform: 'none',
+          fontWeight: 'bold',
+          maxWidth: '300px', // Limit the width of the button
+          width: '100%',
+          margin: '0 auto', // Center the button
+          '&:hover': {
+            backgroundColor: '#E5C300',
+          },
+        }}
+        component={Link}
+        to="/signup"
+        onClick={toggleDrawer(false)}
+      >
+        Sign Up
+      </Button>
+      <Button
+        variant="outlined"
+        sx={{
+          color: '#FFD700',
+          borderColor: '#FFD700',
+          textTransform: 'none',
+          fontWeight: 'bold',
+          maxWidth: '300px', // Limit the width of the button
+          width: '100%',
+          margin: '0 auto', // Center the button
+          '&:hover': {
+            backgroundColor: '#E5C300',
+            borderColor: '#E5C300',
+          },
+        }}
+        component={Link}
+        to="/login"
+        onClick={toggleDrawer(false)}
+      >
+        Log In
+      </Button>
+    </>
+  ) : (
+    <Button
+      variant="outlined"
+      sx={{
+        color: '#FFD700',
+        borderColor: '#FFD700',
+        textTransform: 'none',
+        fontWeight: 'bold',
+        maxWidth: '300px', // Limit the width of the button
+        width: '100%',
+        margin: '0 auto', // Center the button
+        '&:hover': {
+          backgroundColor: '#E5C300',
+          borderColor: '#E5C300',
+        },
+      }}
+      onClick={() => {
+        handleLogout();
+        toggleDrawer(false);
+      }}
+    >
+      Logout
+    </Button>
+  )}
+</Box>
+          <Divider sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.2)' }} />
+
+          {/* Menu Items */}
+          <List>
+            {menuItems.map((menu, index) => (
+              <ListItem
+                button
+                key={index}
+                component={Link}
+                to={menu.path}
+                onClick={toggleDrawer(false)}
+                sx={{
+                  textDecoration: 'none',
+                  color: 'white',
+                  padding: '12px 32px', // Adjusted padding to move items to the right
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  },
+                }}
+              >
+                <ListItemText
+                  primary={menu.label}
+                  primaryTypographyProps={{
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                  }}
+                />
+              </ListItem>
+            ))}
+          </List>
         </Drawer>
       </Toolbar>
     </AppBar>
