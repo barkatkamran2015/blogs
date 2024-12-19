@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./Footer"; // Import the Footer component
 import Home from "./components/Home";
@@ -35,6 +35,21 @@ const ProtectedRoute = ({ children }) => {
   }
 
   return children;
+};
+
+// Footer Wrapper to handle conditional rendering
+const FooterWrapper = () => {
+  const location = useLocation();
+  
+  // Define the routes where the footer should NOT appear
+  const noFooterRoutes = ["/login", "/signup"];
+
+  // Check if the current route is one of the no-footer routes
+  if (noFooterRoutes.includes(location.pathname)) {
+    return null; // Do not render the footer
+  }
+
+  return <Footer />;
 };
 
 const App = () => {
@@ -84,8 +99,8 @@ const App = () => {
           </Routes>
         </div>
 
-        {/* Footer displayed on all pages */}
-        <Footer />
+        {/* Conditionally render the Footer */}
+        <FooterWrapper />
       </div>
     </Router>
   );
