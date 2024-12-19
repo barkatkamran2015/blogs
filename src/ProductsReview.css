@@ -20,23 +20,28 @@ body {
 /* Search Bar Container */
 .products-review__search-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: right;
   margin-top: 80px;
-  margin-left: 600px;
+  margin-left: 350px;
   width: 100%;
-  height: auto;
   box-sizing: border-box;
+}
+.products-review__search-input {
+  width: 100%;
+  max-width: 500px; /* Limit width for large screens */
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: border 0.3s ease;
 }
 
 /* Content Grid */
 .products-review__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
-  gap: 20px; /* Space between grid items */
-  width: 100%; /* Take full width */
-  justify-content: center; /* Center grid items */
-  align-items: start; /* Align items to the top */
+  gap: 20px;
+  justify-content: center;
+  align-items: start;
 }
 
 /* Individual Card */
