@@ -68,7 +68,6 @@ body {
   font-weight: bold;
   color: #333;
   margin-bottom: 10px;
-  text-align: center;
 }
 
 /* Blog Content */
@@ -76,7 +75,6 @@ body {
   font-size: 1rem;
   color: #555;
   line-height: 1.5;
-  text-align: justify;
 }
 
 /* Blog Image */
@@ -87,9 +85,6 @@ body {
   object-fit: cover;
   margin-bottom: 15px;
 }
-
-/* Responsive Adjustments */
-
 /* Medium Devices (Tablets) */
 @media screen and (max-width: 1024px) {
   .blog-page__search-container {
@@ -151,8 +146,8 @@ body {
   }
 
   .blog-page__search-container {
-    margin: 10px auto;
-    margin-left: 50px;
+    margin: 5px 50px 30px;
+    justify-content: center;
   }
 
   .blog-page__title {
@@ -161,5 +156,9 @@ body {
 
   .blog-page__content {
     font-size: 0.85rem;
+  }
+  .blog-page__card {
+    padding: 20px;
+    margin-top: 20px;
   }
 }
