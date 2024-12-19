@@ -429,7 +429,9 @@ return (
     <option value="#e0f7fa">Blue</option>
     <option value="#e8f5e9">Green</option>
     <option value="#eceff1">Gray</option>
-    <option value="#ff5733">Orange</option>
+    <option value="#006a7a">Blue-Green Cyan</option>
+    <option value="#6568a6">Slat Blue</option>
+    <option value="#c299c0">Pastel Lavender</option>
   </select>
 </div>
 
