@@ -1,234 +1,146 @@
 import React, { useState, useEffect } from 'react';
-import { auth } from '../Admin/firebaseConfig';
-import { signOut } from 'firebase/auth';
-import { Link } from 'react-router-dom';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  Box,
-  Divider,
-  Button,
-} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
-import imageLogo from '../assets/logo1.png';
+import '../Home.css';
+import SearchBar from '../components/SearchBar';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
-const Navbar = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [user, setUser] = useState(null);
+// Static Images for Slider
+import imageBlog from '../assets/blog.jpg';
+import imageNature from '../assets/nature.jpg';
+import imageRecipe from '../assets/recipe.jpg';
 
-  const menuItems = [
-    { label: 'Home', path: '/' },
-    { label: 'About', path: '/about' },
-    { label: 'Recipe', path: '/recipe' },
-    { label: 'Blog', path: '/blog' },
-    { label: 'Products Review', path: '/products-review' },
-    { label: 'Contact', path: '/contact' },
-  ];
+const API_URL = 'https://barkatkamran.com/db.php';
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(setUser);
-    return () => unsubscribe();
-  }, []);
+const Home = () => {
+  const [posts, setPosts] = useState([]); // All fetched posts
+  const [filteredPosts, setFilteredPosts] = useState([]); // Search results
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(''); // Error state
 
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => console.log('User signed out'))
-      .catch((error) => console.error('Error signing out: ', error));
+  // Page paths for redirection
+  const pagePaths = {
+    Recipe: '/recipe',
+    Blog: '/blog',
+    'Products Review': '/products-review',
   };
 
-  const toggleDrawer = (open) => () => {
-    setDrawerOpen(open);
+  // Fetch posts on component mount
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${API_URL}?method=GET`);
+        if (!response.ok) throw new Error('Failed to fetch posts');
+
+        const data = await response.json();
+        setPosts(data);
+        setFilteredPosts(data);
+      } catch (err) {
+        console.error('Error fetching posts:', err);
+        setError('Failed to load posts. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPosts();
+  }, []);
+
+  // Handle search functionality
+  const handleSearch = (query) => {
+    const lowerCaseQuery = query.toLowerCase();
+    const results = posts.filter(
+      (post) =>
+        post.title.toLowerCase().includes(lowerCaseQuery) ||
+        (post.content && post.content.toLowerCase().includes(lowerCaseQuery))
+    );
+    setFilteredPosts(results);
+  };
+
+  // Navigate to specific page (without postId)
+  const navigateToPost = (page) => {
+    const basePath = pagePaths[page] || '/';
+    window.location.href = basePath;
   };
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: '#0b9299' }}>
-      <Toolbar>
-        {/* Logo */}
-        <Typography
-          variant="h6"
-          sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}
-        >
-          <Link to="/" style={{ textDecoration: 'none' }}>
-            <img
-              src={imageLogo}
-              alt="Classy Mama Logo"
-              style={{
-                height: '60px',
-                objectFit: 'contain',
-                marginTop: '8px',
-              }}
-            />
-          </Link>
-        </Typography>
+    <div className="home-page">
+      {/* Loading and Error States */}
+      {loading ? (
+        <div className="home-page__loading-spinner">
+          <p>Loading...</p>
+        </div>
+      ) : error ? (
+        <p className="home-page__error-message">{error}</p>
+      ) : (
+        <>
+          {/* Featured Slider */}
+          <Slider className="home-page__featured-slider" autoplay dots>
+            <div>
+              <img src={imageBlog} alt="Blog" className="home-page__slider-image" />
+              <h3 className="home-page__slider-text">Explore Inspiring Blogs</h3>
+            </div>
+            <div>
+              <img src={imageNature} alt="Nature" className="home-page__slider-image" />
+              <h3 className="home-page__slider-text">Discover Nature's Beauty</h3>
+            </div>
+            <div>
+              <img src={imageRecipe} alt="Recipe" className="home-page__slider-image" />
+              <h3 className="home-page__slider-text">Healthy Recipe Ideas</h3>
+            </div>
+          </Slider>
 
-        {/* Hamburger Menu */}
-        <IconButton
-          edge="end"
-          color="inherit"
-          sx={{
-            display: { xs: 'block', md: 'none' },
-            border: '2px solid white',
-            borderRadius: '50%',
-            padding: '8px',
-            width: '50px',
-            height: '50px',
-          }}
-          onClick={toggleDrawer(true)}
-        >
-          <MenuIcon sx={{ fontSize: '24px' }} />
-        </IconButton>
+          {/* Search Bar */}
+          <SearchBar
+            onSearch={handleSearch}
+            placeholder="Search for blogs, reviews, or recipes..."
+          />
 
-        {/* Mobile Drawer */}
-        <Drawer
-          anchor="right"
-          open={drawerOpen}
-          onClose={toggleDrawer(false)}
-          sx={{
-            '& .MuiDrawer-paper': {
-              width: '100vw',
-              height: '100vh',
-              background: 'linear-gradient(180deg, #0b9299, #005f63)',
-              color: 'white',
-              padding: '16px',
-            },
-          }}
-        >
-          {/* Drawer Header */}
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
-              paddingBottom: '16px',
-            }}
-          >
-            {/* Logo aligned to the left */}
-            <Box sx={{ flexGrow: 1 }}>
-              <img
-                src={imageLogo}
-                alt="Classy Mama Logo"
-                style={{ height: '40px', objectFit: 'contain', marginLeft: '15px' }}
-              />
-            </Box>
-            <IconButton onClick={toggleDrawer(false)} sx={{ color: 'white' }}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
+          {/* Posts Section */}
+          <div className="home-page__posts-container">
+            {filteredPosts.length === 0 ? (
+              <p>No posts available</p>
+            ) : (
+              filteredPosts.map((post) => (
+                <div
+                  key={post.id}
+                  className="home-page__post-item"
+                  style={{ backgroundColor: post.backgroundColor || '#fff' }}
+                >
+                  {/* Image */}
+                  {post.imageUrl && (
+                    <img
+                      src={post.imageUrl}
+                      alt={post.title}
+                      className="home-page__post-image"
+                    />
+                  )}
 
-          {/* Sign Up and Login Buttons */}
-          {/* Sign Up and Login Buttons */}
-<Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
-  {!user ? (
-    <>
-      <Button
-        variant="contained"
-        sx={{
-          backgroundColor: '#FFD700',
-          color: '#6A5ACD',
-          textTransform: 'none',
-          fontWeight: 'bold',
-          maxWidth: '300px', // Limit the width of the button
-          width: '100%',
-          margin: '0 auto', // Center the button
-          '&:hover': {
-            backgroundColor: '#E5C300',
-          },
-        }}
-        component={Link}
-        to="/signup"
-        onClick={toggleDrawer(false)}
-      >
-        Sign Up
-      </Button>
-      <Button
-        variant="outlined"
-        sx={{
-          color: '#FFD700',
-          borderColor: '#FFD700',
-          textTransform: 'none',
-          fontWeight: 'bold',
-          maxWidth: '300px', // Limit the width of the button
-          width: '100%',
-          margin: '0 auto', // Center the button
-          '&:hover': {
-            backgroundColor: '#E5C300',
-            borderColor: '#E5C300',
-          },
-        }}
-        component={Link}
-        to="/login"
-        onClick={toggleDrawer(false)}
-      >
-        Log In
-      </Button>
-    </>
-  ) : (
-    <Button
-      variant="outlined"
-      sx={{
-        color: '#FFD700',
-        borderColor: '#FFD700',
-        textTransform: 'none',
-        fontWeight: 'bold',
-        maxWidth: '300px', // Limit the width of the button
-        width: '100%',
-        margin: '0 auto', // Center the button
-        '&:hover': {
-          backgroundColor: '#E5C300',
-          borderColor: '#E5C300',
-        },
-      }}
-      onClick={() => {
-        handleLogout();
-        toggleDrawer(false);
-      }}
-    >
-      Logout
-    </Button>
-  )}
-</Box>
-          <Divider sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.2)' }} />
-
-          {/* Menu Items */}
-          <List>
-            {menuItems.map((menu, index) => (
-              <ListItem
-                button
-                key={index}
-                component={Link}
-                to={menu.path}
-                onClick={toggleDrawer(false)}
-                sx={{
-                  textDecoration: 'none',
-                  color: 'white',
-                  padding: '12px 32px', // Adjusted padding to move items to the right
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  },
-                }}
-              >
-                <ListItemText
-                  primary={menu.label}
-                  primaryTypographyProps={{
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                  }}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
-      </Toolbar>
-    </AppBar>
+                  {/* Details */}
+                  <div className="home-page__post-details">
+                    <h2 className="home-page__post-title">{post.title}</h2>
+                    <div
+                      className="home-page__post-excerpt"
+                      dangerouslySetInnerHTML={{
+                        __html: post.content.slice(0, 150) + '...',
+                      }}
+                    />
+                    {/* Read More Button */}
+                    <button
+                      className="home-page__cta-button"
+                      onClick={() => navigateToPost(post.page)} // Redirects to the page path only
+                    >
+                      Read More
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 
-export default Navbar;
+export default Home;
