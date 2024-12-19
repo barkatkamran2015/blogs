@@ -35,7 +35,7 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="sticky" style={{ backgroundColor: '#6A5ACD' }}> {/* Change color here */}
+    <AppBar position="sticky" style={{ backgroundColor: '#0b9299' }}> {/* Change color here */}
       <Toolbar>
         {/* Logo */}
         <Typography 
