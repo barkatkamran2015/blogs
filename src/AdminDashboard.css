@@ -228,6 +228,28 @@ h2 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.color-picker {
+  margin-right: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.size-select,
+.position-select {
+  margin-left: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.title-style-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+
 /* Define font classes for the editor content */
 .ql-font-roboto { font-family: 'Roboto', sans-serif; }
 .ql-font-arial { font-family: 'Arial', sans-serif; }
