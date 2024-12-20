@@ -24,7 +24,7 @@ body {
 .products-review__search-container {
   display: flex;
   justify-content: center; /* Center search bar */
-  margin: 20px 0;
+  margin: 80px 10px 1px 600px;
   width: 100%;
   box-sizing: border-box;
 }
