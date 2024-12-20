@@ -70,6 +70,10 @@ Quill.register(Size, true);
 const API_URL = 'https://barkatkamran.com/db.php';
 
 const AdminDashboard = () => {
+  const [titleColor, setTitleColor] = useState('#000000'); // Default black color
+const [titleSize, setTitleSize] = useState('24px'); // Default size
+const [titlePosition, setTitlePosition] = useState('center'); // Default center alignment
+
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [selectedPage, setSelectedPage] = useState('Blog');
@@ -190,7 +194,7 @@ const handlePostSubmission = async (e) => {
   // 1. Validation: Ensure title and content are provided
   if (!content) {
     setError('Content is required');
-    return;
+    return;  
 }
 
   try {
@@ -207,13 +211,18 @@ const handlePostSubmission = async (e) => {
 
     // 3. Prepare payload for the server
     const requestBody = {
-      id: editMode ? currentPostId : null, // Include 'id' only in edit mode
+      id: editMode ? currentPostId : null,
       title: title.trim(),
       content: sanitizedContent,
-      imageUrl: imageURL || '', // Provide fallback empty string for imageURL
+      imageUrl: imageURL || '',
       page: selectedPage,
       backgroundColor: selectedBackgroundColor || '#ffffff',
-    };
+      titleStyle: {
+        color: titleColor,
+        fontSize: titleSize,
+        textAlign: titlePosition,
+      },
+    };    
 
     console.log('Request Payload:', requestBody); // Debugging request payload
 
@@ -398,6 +407,42 @@ return (
   />
 </div>
 
+<div className="form-group title-style-group">
+  <label htmlFor="title-color" className="form-label">Title Color:</label>
+  <input
+    type="color"
+    id="title-color"
+    value={titleColor}
+    onChange={(e) => setTitleColor(e.target.value)}
+    className="color-picker"
+  />
+
+  <label htmlFor="title-size" className="form-label">Title Font Size:</label>
+  <select
+    id="title-size"
+    value={titleSize}
+    onChange={(e) => setTitleSize(e.target.value)}
+    className="size-select"
+  >
+    <option value="16px">Small</option>
+    <option value="24px">Medium</option>
+    <option value="36px">Large</option>
+    <option value="48px">Extra Large</option>
+  </select>
+
+  <label htmlFor="title-position" className="form-label">Title Alignment:</label>
+  <select
+    id="title-position"
+    value={titlePosition}
+    onChange={(e) => setTitlePosition(e.target.value)}
+    className="position-select"
+  >
+    <option value="left">Left</option>
+    <option value="center">Center</option>
+    <option value="right">Right</option>
+  </select>
+</div>
+
 {/* Page Selection */}
 <div className="form-group page-select-group">
   <label htmlFor="page-select" className="form-label">
@@ -457,7 +502,17 @@ return (
             }}
           >
             {/* Post Title */}
-            <h4 className="post-title">{post.title}</h4>
+            <h4
+  className="post-title"
+  style={{
+    color: titleColor,
+    fontSize: titleSize,
+    textAlign: titlePosition,
+  }}
+>
+  {post.title}
+</h4>
+
 
             {/* Post Content */}
             <PostContent content={post.content} />
