@@ -19,6 +19,7 @@ const Blog = () => {
         if (!response.ok) throw new Error('Failed to fetch posts');
 
         const data = await response.json();
+        console.log('Fetched Posts:', data); // Debug fetched posts
         const blogPosts = data.filter((post) => post.page === 'Blog');
 
         setPosts(blogPosts);
@@ -38,10 +39,16 @@ const Blog = () => {
 
   // Search functionality to filter posts
   const handleSearch = (searchTerm) => {
-    const filtered = posts.filter((post) =>
-      post.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredPosts(filtered);
+    if (!searchTerm.trim()) {
+      setFilteredPosts(posts); // Reset to all posts if search term is empty
+    } else {
+      const filtered = posts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          post.content.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredPosts(filtered);
+    }
   };
 
   return (
