@@ -22,6 +22,8 @@ const Recipe = () => {
         if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
 
         const data = await response.json();
+        console.log('Fetched Recipe Posts:', data); // Debug fetched posts
+
         const recipePosts = data.filter((post) => post.page === 'Recipe');
 
         // Set posts and filtered posts
@@ -49,10 +51,16 @@ const Recipe = () => {
 
   // Search functionality
   const handleSearch = (searchTerm) => {
-    const filtered = posts.filter((post) =>
-      post.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredPosts(filtered);
+    if (!searchTerm.trim()) {
+      setFilteredPosts(posts); // Reset to all posts if search term is empty
+    } else {
+      const filtered = posts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          post.content.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredPosts(filtered);
+    }
   };
 
   // Filter functionality
