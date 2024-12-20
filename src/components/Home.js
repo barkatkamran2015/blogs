@@ -122,7 +122,7 @@ const Home = () => {
                     <div
                       className="home-page__post-excerpt"
                       dangerouslySetInnerHTML={{
-                        __html: post.content.slice(0, 150) + '...',
+                        __html: post.content.slice(0, 350) + '...',
                       }}
                     />
                     {/* Read More Button */}
