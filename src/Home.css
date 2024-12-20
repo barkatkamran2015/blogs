@@ -34,7 +34,7 @@
 
 .home-page__post-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* Updated to prevent height constraints */
   gap: 20px;
   padding: 20px;
   border-radius: 8px;
@@ -60,6 +60,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 0; /* Added to avoid layout squeezing */
 }
 
 .home-page__post-title {
@@ -74,10 +75,12 @@
   color: #555;
   margin-bottom: 15px;
   line-height: 1.5;
+  max-height: none; /* Ensure no truncation */
+  overflow: visible; /* Ensure full content visibility */
 }
 
 .home-page__cta-button {
-  background-color: #007bff;
+  background-color: #0b9299;
   color: white;
   padding: 8px 12px;
   border: none;
@@ -106,6 +109,7 @@
   .home-page__post-details {
     text-align: center;
     padding: 15px;
+    overflow: visible; /* Ensure full content on mobile */
   }
 
   .home-page__cta-button {
