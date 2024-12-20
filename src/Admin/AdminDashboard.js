@@ -92,17 +92,25 @@ const [titlePosition, setTitlePosition] = useState('center'); // Default center 
   // Fetch all posts from the backend
   const fetchPosts = useCallback(async () => {
     try {
-      setIsLoading(true);
       const response = await fetch(`${API_URL}?method=GET`);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch posts: ${response.statusText}`);
-      }
+      if (!response.ok) throw new Error('Failed to fetch posts');
+      
       const postData = await response.json();
-      setAllPosts(postData);
-      setPosts(postData.filter((post) => post.page === selectedPage));
+      console.log('Fetched Posts:', postData); // Debugging
+      
+      const formattedPosts = postData.map((post) => ({
+        ...post,
+        titleStyle: post.titleStyle
+          ? JSON.parse(post.titleStyle) // Parse JSON if titleStyle is a string
+          : { color: '#000', fontSize: '24px', textAlign: 'center' }, // Default
+      }));
+      console.log('Formatted Posts with Title Style:', formattedPosts); // Debugging
+      
+      setAllPosts(formattedPosts);
+      setPosts(formattedPosts.filter((post) => post.page === selectedPage));
     } catch (err) {
       console.error('Error fetching posts:', err);
-      setError('Failed to fetch posts. Please try again later.');
+      setError('Failed to fetch posts. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -192,10 +200,28 @@ const handlePostSubmission = async (e) => {
   e.preventDefault();
 
   // 1. Validation: Ensure title and content are provided
-  if (!content) {
-    setError('Content is required');
-    return;  
-}
+  const validateTitleStyle = (style) => {
+    const validColors = /^#[0-9A-F]{6}$/i; // Hex color validation
+    const validFontSizes = ['8px', '10px', '12px', '14px', '16px', '18px', '24px', '36px', '48px', '72px'];
+    const validTextAligns = ['left', 'center', 'right'];
+  
+    return {
+      color: validColors.test(style.color) ? style.color : '#000000',
+      fontSize: validFontSizes.includes(style.fontSize) ? style.fontSize : '24px',
+      textAlign: validTextAligns.includes(style.textAlign) ? style.textAlign : 'center',
+    };
+  };
+  
+  const validatedStyle = validateTitleStyle({
+    color: titleColor,
+    fontSize: titleSize,
+    textAlign: titlePosition,
+  });
+  
+  if (!content.trim()) {
+    setError('Content is required.');
+    return;
+  }
 
   try {
     setIsLoading(true);
@@ -204,30 +230,30 @@ const handlePostSubmission = async (e) => {
 
     // 2. Process and sanitize content
     const processedContent = persistImageDimensions(content); // Ensure images retain dimensions
-    const sanitizedContent = DOMPurify.sanitize(content, {
+    const sanitizedContent = DOMPurify.sanitize(processedContent, {
       ALLOWED_TAGS: ['img', 'p', 'div', 'span', 'br', 'strong', 'em', 'a', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li'],
       ALLOWED_ATTR: ['src', 'width', 'height', 'alt', 'style', 'class', 'align'],
-    });    
+    });
 
     // 3. Prepare payload for the server
     const requestBody = {
-      id: editMode ? currentPostId : null,
+      id: editMode ? currentPostId : null, // Include ID if in edit mode
       title: title.trim(),
       content: sanitizedContent,
-      imageUrl: imageURL || '',
-      page: selectedPage,
-      backgroundColor: selectedBackgroundColor || '#ffffff',
+      imageUrl: imageURL || '', // Use existing image URL or empty string
+      page: selectedPage, // Current page (e.g., Blog, Products Review)
+      backgroundColor: selectedBackgroundColor || '#ffffff', // Default background
       titleStyle: {
-        color: titleColor,
-        fontSize: titleSize,
-        textAlign: titlePosition,
+        color: titleColor, // Title text color
+        fontSize: titleSize, // Title font size
+        textAlign: titlePosition, // Title alignment
       },
-    };    
+    };
 
     console.log('Request Payload:', requestBody); // Debugging request payload
 
     // 4. Send request to the server
-    const method = editMode ? 'PUT' : 'POST';
+    const method = editMode ? 'PUT' : 'POST'; // Use PUT for editing, POST for creating
     const response = await fetch(API_URL, {
       method,
       headers: { 'Content-Type': 'application/json' },
@@ -238,24 +264,25 @@ const handlePostSubmission = async (e) => {
 
     // 5. Handle server response
     if (!response.ok) {
-      throw new Error(`Failed to fetch posts: ${response.statusText}`);
-    }    
+      const errorText = await response.text(); // Capture additional error information
+      throw new Error(`Failed to save post. Server responded with: ${errorText}`);
+    }
 
-    const responseData = await response.json(); // Parse success response
-    console.log('Server Response Data:', responseData);
+    const responseData = await response.json(); // Parse JSON response
+    console.log('Server Response Data:', responseData); // Debug response data
 
     // 6. Success: Notify user and refresh posts
     setSuccessMessage(responseData.message || 'Post saved successfully!');
-    fetchPosts(); // Refresh posts list
+    fetchPosts(); // Refresh the posts list
     resetForm(); // Reset the form inputs
-
   } catch (err) {
-    console.error('Error saving post:', err.message);
+    console.error('Error saving post:', err.message); // Log error for debugging
     setError(`Failed to save post. Reason: ${err.message}`);
   } finally {
     setIsLoading(false); // Reset loading state
   }
 };
+
    
   // Handle delete post
   const handleDelete = async (postId) => {
@@ -285,12 +312,18 @@ const handlePostSubmission = async (e) => {
   // Handle editing a post
   const handleEdit = (post) => {
     setTitle(post.title);
-    setContent(persistImageDimensions(post.content)); // Ensure dimensions persist on edit
+    setContent(persistImageDimensions(post.content));
     setSelectedPage(post.page || 'Blog');
     setImageURL(post.imageUrl || '');
     setEditMode(true);
     setCurrentPostId(post.id);
-  };  
+  
+    // Populate title style fields
+    setTitleColor(post.titleStyle?.color || '#000000');
+    setTitleSize(post.titleStyle?.fontSize || '24px');
+    setTitlePosition(post.titleStyle?.textAlign || 'center');
+  };
+   
 
   // Reset form to initial state
   const resetForm = () => {
@@ -505,14 +538,13 @@ return (
             <h4
   className="post-title"
   style={{
-    color: titleColor,
-    fontSize: titleSize,
-    textAlign: titlePosition,
+    color: post.titleStyle?.color || '#000', // Default to black
+    fontSize: post.titleStyle?.fontSize || '24px', // Default size
+    textAlign: post.titleStyle?.textAlign || 'center', // Default alignment
   }}
 >
   {post.title}
 </h4>
-
 
             {/* Post Content */}
             <PostContent content={post.content} />
