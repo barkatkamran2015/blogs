@@ -179,7 +179,7 @@ body {
   }
 
   .products-review__image {
-    height: 150px; /* Smaller images for mobile */
+    height: auto;
   }
 
   .products-review__card {
