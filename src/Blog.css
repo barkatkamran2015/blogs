@@ -178,7 +178,7 @@ body {
   }
 
   .blog-page__image {
-    height: 150px; /* Smaller images for mobile */
+    height: auto;
   }
 
   .blog-page__card {
