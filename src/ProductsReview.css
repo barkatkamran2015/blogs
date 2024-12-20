@@ -4,6 +4,8 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f4f4f4;
+  overflow-x: hidden; /* Prevent horizontal overflow */
+  box-sizing: border-box;
 }
 
 /* Page Wrapper */
@@ -15,17 +17,18 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center; /* Center all content */
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 /* Search Bar Container */
 .products-review__search-container {
   display: flex;
-  justify-content: right;
-  margin-top: 80px;
-  margin-left: 350px;
+  justify-content: center; /* Center search bar */
+  margin: 20px 0;
   width: 100%;
   box-sizing: border-box;
 }
+
 .products-review__search-input {
   width: 100%;
   max-width: 500px; /* Limit width for large screens */
@@ -42,6 +45,9 @@ body {
   gap: 20px;
   justify-content: center;
   align-items: start;
+  width: 100%; /* Ensure grid fits within the viewport */
+  max-width: 100%; /* Prevent overflow */
+  box-sizing: border-box;
 }
 
 /* Individual Card */
@@ -54,6 +60,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  max-width: 100%; /* Prevent card overflow */
 }
 
 .products-review__card:hover {
@@ -79,11 +86,12 @@ body {
 
 /* Image */
 .products-review__image {
-  width: 100%;
-  height: auto; /* Fixed height for consistency */
+  width: 100%; /* Ensure images do not overflow */
+  height: auto; /* Maintain aspect ratio */
   border-radius: 8px;
   object-fit: cover;
   margin-top: 10px;
+  display: block; /* Fix inline-block issues */
 }
 
 /* Loading and Error Messages */
@@ -104,6 +112,7 @@ body {
 @media screen and (max-width: 1024px) {
   .products-review__search-container {
     margin: 20px 0;
+    justify-content: center; /* Center for medium screens */
   }
 
   .products-review__grid {
@@ -118,10 +127,12 @@ body {
 @media screen and (max-width: 768px) {
   .products-review-page {
     padding: 10px;
+    margin: 0; /* Ensure no horizontal overflow */
   }
 
   .products-review__search-container {
     margin: 20px 0; /* Centered with consistent spacing */
+    width: 100%; /* Ensure proper alignment */
   }
 
   .products-review__grid {
@@ -135,22 +146,28 @@ body {
   .products-review__content {
     font-size: 0.95rem;
   }
+
+  .products-review__card {
+    padding: 15px; /* Adjust padding for smaller screens */
+  }
 }
 
 @media screen and (max-width: 480px) {
   .products-review-page {
     padding: 10px;
-    margin-top: 20px;
+    margin-top: 10px; /* Reduce top margin for smaller devices */
   }
 
   .products-review__search-container {
-    margin: -10px;
-    justify-content: center;
-    margin-left: 85px;
+    margin: 5px 10px 25px 90px; /* Consistent spacing on mobile */
+    justify-content: center; /* Center search bar */
   }
 
   .products-review__grid {
-    gap: 10px;
+    gap: 20px;
+  }
+  .products-review__card{
+    margin-top: 20px;
   }
 
   .products-review__title {
@@ -164,8 +181,8 @@ body {
   .products-review__image {
     height: 150px; /* Smaller images for mobile */
   }
+
   .products-review__card {
-    padding: 20px;
-    margin-top: 60px;
+    padding: 15px;
   }
 }
