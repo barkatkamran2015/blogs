@@ -16,9 +16,8 @@ const ProductsReview = () => {
         setLoading(true);
 
         const response = await fetch(`${API_URL}?page=Products Review`);
-        if (!response.ok) throw new Error('Failed to fetch posts');
-
         const data = await response.json();
+        console.log('Fetched Products Review Posts:', data); // Debug fetched data
 
         const productsReviewPosts = data.filter((post) => post.page === 'Products Review');
         setPosts(productsReviewPosts);
@@ -39,19 +38,23 @@ const ProductsReview = () => {
   }, []);
 
   const handleSearch = (searchTerm) => {
-    const filtered = posts.filter(
-      (post) =>
-        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.content.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredPosts(filtered);
+    if (!searchTerm.trim()) {
+      setFilteredPosts(posts); // Reset to all posts
+    } else {
+      const filtered = posts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          post.content.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredPosts(filtered);
+    }
   };
 
   return (
     <div className="products-review-page">
       {/* Search Bar */}
       <div className="products-review__search-container">
-        <Header onSearch={handleSearch} />
+        <Header onSearch={handleSearch} placeholder="Search product reviews..." />
       </div>
 
       {/* Content */}
