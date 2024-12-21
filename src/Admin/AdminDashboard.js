@@ -242,13 +242,13 @@ const handlePostSubmission = async (e) => {
       content: sanitizedContent,
       imageUrl: imageURL || '', // Use existing image URL or empty string
       page: selectedPage, // Current page (e.g., Blog, Products Review)
-      backgroundColor: selectedBackgroundColor || '#ffffff', // Default background
+      backgroundColor: selectedBackgroundColor || '#ffffff', // Include selected background color
       titleStyle: {
         color: titleColor, // Title text color
         fontSize: titleSize, // Title font size
         textAlign: titlePosition, // Title alignment
       },
-    };
+    };    
 
     console.log('Request Payload:', requestBody); // Debugging request payload
 
@@ -434,19 +434,22 @@ return (
       )}
 
       {/* Rich Text Editor */}
-      <div className="editor-container">
-        <label htmlFor="rich-editor" className="form-label">
-          Write Content:
-        </label>
-        <ReactQuill
-          ref={quillRef}
-          value={content}
-          onChange={setContent}
-          theme="snow"
-          modules={modules}
-          className="quill-editor"
-        />
-      </div>
+      <div
+  className="editor-container"
+  style={{ backgroundColor: selectedBackgroundColor }} // Apply selected background color
+>
+  <label htmlFor="rich-editor" className="form-label">
+    Write Content:
+  </label>
+  <ReactQuill
+    ref={quillRef}
+    value={content}
+    onChange={setContent}
+    theme="snow"
+    modules={modules}
+    className="quill-editor"
+  />
+</div>
 
       {/* Title Styling */}
       <div className="form-group title-style-group">
