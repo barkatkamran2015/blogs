@@ -86,7 +86,9 @@ const ProductsReview = () => {
       {/* Content */}
       <div className="products-review__content-wrapper">
         {loading ? (
-          <p className="products-review__loading-message">Loading posts...</p>
+          <div className="loading-container">
+            <div className="heart-loader"></div>
+          </div>
         ) : error ? (
           <p className="products-review__error-message">{error}</p>
         ) : filteredPosts.length === 0 ? (
