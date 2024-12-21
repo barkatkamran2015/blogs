@@ -216,7 +216,7 @@ body {
   }
 
   .recipe-page__image {
-    height: 150px; /* Smaller image height for phones */
+    height: auto; /* Smaller image height for phones */
   }
 
   .recipe-page__card {
