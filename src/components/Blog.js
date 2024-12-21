@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom'; // To handle URL parameters
 import Header from '../components/Header'; // Import Header component
 import '../Blog.css'; // Import Blog-specific CSS
 
@@ -9,6 +10,11 @@ const Blog = () => {
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const location = useLocation(); // To access the query params
+
+  // Extract `id` from URL query params to scroll to the specific post
+  const queryParams = new URLSearchParams(location.search);
+  const postIdFromQuery = queryParams.get('id');
 
   // Fetch Blog posts on component mount
   useEffect(() => {
@@ -26,6 +32,16 @@ const Blog = () => {
         setFilteredPosts(blogPosts);
 
         if (blogPosts.length === 0) setError('No posts found for the Blog page.');
+
+        // Scroll to the specific post if `id` is provided in the query
+        if (postIdFromQuery) {
+          setTimeout(() => {
+            const element = document.getElementById(`post-${postIdFromQuery}`);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 500); // Delay to ensure DOM is rendered
+        }
       } catch (err) {
         console.error('Error fetching blog posts:', err);
         setError('Failed to load posts. Please try again.');
@@ -35,7 +51,7 @@ const Blog = () => {
     };
 
     fetchPosts();
-  }, []);
+  }, [postIdFromQuery]);
 
   // Search functionality to filter posts
   const handleSearch = (searchTerm) => {
@@ -71,10 +87,20 @@ const Blog = () => {
             {filteredPosts.map((post) => (
               <div
                 key={post.id}
+                id={`post-${post.id}`} // Add unique ID for scrolling
                 className="blog-page__card"
                 style={{ backgroundColor: post.backgroundColor || '#fafafa' }}
               >
-                <h3 className="blog-page__title">{post.title}</h3>
+                <h3
+                  className="blog-page__title"
+                  style={{
+                    color: post.titleStyle?.color || '#000',
+                    fontSize: post.titleStyle?.fontSize || '1.5rem',
+                    textAlign: post.titleStyle?.textAlign || 'left',
+                  }}
+                >
+                  {post.title}
+                </h3>
                 <div
                   className="blog-page__content"
                   dangerouslySetInnerHTML={{ __html: post.content }}
