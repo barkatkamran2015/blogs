@@ -34,19 +34,19 @@
 
 .home-page__post-item {
   display: flex;
-  align-items: flex-start; /* Updated to prevent height constraints */
+  align-items: flex-start;
   gap: 20px;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  background-color: #fff; /* Ensure a consistent default background */
+  background-color: #fff;
   transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
   cursor: pointer;
 }
 
 .home-page__post-item:hover {
   transform: scale(1.02);
-  background-color: #f9f9f9; /* Slight hover effect for clarity */
+  background-color: #f9f9f9;
 }
 
 .home-page__post-image {
@@ -62,7 +62,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 0; /* Prevent layout squeezing */
+  min-width: 0;
 }
 
 /* Post Title */
@@ -72,9 +72,9 @@
   margin-bottom: 10px;
   color: #333;
   word-wrap: break-word; /* Ensure long words break correctly */
-  text-align: left; /* Default alignment */
-  line-height: 1.4; /* Improve readability */
-  transition: all 0.3s ease-in-out; /* Smooth transitions for dynamic styles */
+  text-align: left;
+  line-height: 1.4;
+  transition: all 0.3s ease-in-out;
 }
 
 /* Post Excerpt */
@@ -83,8 +83,6 @@
   color: #555;
   margin-bottom: 15px;
   line-height: 1.5;
-  max-height: none; /* Ensure no truncation */
-  overflow: visible; /* Ensure full content visibility */
 }
 
 /* Call-to-Action Button */
@@ -118,10 +116,30 @@
   .home-page__post-details {
     text-align: center;
     padding: 15px;
-    overflow: visible; /* Ensure full content on mobile */
+  }
+
+  .home-page__post-title {
+    font-size: 1.5rem;
+    text-align: center; /* Center align for smaller screens */
   }
 
   .home-page__cta-button {
     align-self: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-page__post-title {
+    font-size: 1.2rem; /* Reduce font size for extra small screens */
+  }
+
+  .home-page__post-excerpt {
+    font-size: 0.9rem; /* Adjust excerpt font size */
+    text-align: left;
+  }
+
+  .home-page__cta-button {
+    font-size: 0.9rem;
+    padding: 6px 10px;
   }
 }
