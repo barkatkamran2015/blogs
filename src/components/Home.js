@@ -78,8 +78,8 @@ const Home = () => {
     <div className="home-page">
       {/* Loading and Error States */}
       {loading ? (
-        <div className="home-page__loading-spinner">
-          <p>Loading...</p>
+        <div className="loading-container">
+          <div className="heart-loader"></div>
         </div>
       ) : error ? (
         <p className="home-page__error-message">{error}</p>
