@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom'; // To handle query parameters
 import Header from '../components/Header'; // Import Header component
 import '../ProductsReview.css'; // Custom CSS for Products Review page
 
@@ -10,12 +11,18 @@ const ProductsReview = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const location = useLocation(); // To get query parameters
+  const queryParams = new URLSearchParams(location.search);
+  const postIdFromQuery = queryParams.get('id'); // Extract `id` from query parameters
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
 
         const response = await fetch(`${API_URL}?page=Products Review`);
+        if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+
         const data = await response.json();
         console.log('Fetched Products Review Posts:', data); // Debug fetched data
 
@@ -26,6 +33,16 @@ const ProductsReview = () => {
         if (productsReviewPosts.length === 0) {
           setError('No posts found for the Products Review page.');
         }
+
+        // Scroll to the specific post if `id` is provided in the query
+        if (postIdFromQuery) {
+          setTimeout(() => {
+            const element = document.getElementById(`post-${postIdFromQuery}`);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 500); // Delay ensures DOM is rendered
+        }
       } catch (err) {
         setError('Failed to load posts. Please try again.');
         console.error('Error fetching posts:', err);
@@ -35,7 +52,7 @@ const ProductsReview = () => {
     };
 
     fetchPosts();
-  }, []);
+  }, [postIdFromQuery]);
 
   const handleSearch = (searchTerm) => {
     if (!searchTerm.trim()) {
@@ -70,14 +87,29 @@ const ProductsReview = () => {
             {filteredPosts.map((post) => (
               <div
                 key={post.id}
+                id={`post-${post.id}`} // Add unique ID for scrolling
                 className="products-review__card"
                 style={{ backgroundColor: post.backgroundColor || '#fafafa' }}
               >
-                <h3 className="products-review__title">{post.title}</h3>
+                {/* Title */}
+                <h2
+                  className="products-review__title"
+                  style={{
+                    color: post.titleStyle?.color || '#000',
+                    fontSize: post.titleStyle?.fontSize || '1.5rem',
+                    textAlign: post.titleStyle?.textAlign || 'left',
+                  }}
+                >
+                  {post.title}
+                </h2>
+
+                {/* Content */}
                 <div
                   className="products-review__content"
                   dangerouslySetInnerHTML={{ __html: post.content }}
                 />
+
+                {/* Image */}
                 {post.imageUrl && (
                   <img
                     src={post.imageUrl}
