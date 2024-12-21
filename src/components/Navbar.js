@@ -60,7 +60,7 @@ const Navbar = () => {
               src={imageLogo}
               alt="Classy Mama Logo"
               style={{
-                height: '60px',
+                height: '55px',
                 objectFit: 'contain',
                 marginTop: '8px',
               }}
