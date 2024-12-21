@@ -34,8 +34,18 @@ const Home = () => {
         if (!response.ok) throw new Error('Failed to fetch posts');
 
         const data = await response.json();
-        setPosts(data);
-        setFilteredPosts(data);
+
+        // Format posts to parse `titleStyle`
+        const formattedPosts = data.map((post) => ({
+          ...post,
+          titleStyle: post.titleStyle
+            ? JSON.parse(post.titleStyle) // Parse JSON if titleStyle is a string
+            : { color: '#000', fontSize: '1.8rem', textAlign: 'left' }, // Default style
+        }));
+
+        console.log('Fetched and Formatted Posts:', formattedPosts); // Debugging
+        setPosts(formattedPosts);
+        setFilteredPosts(formattedPosts);
       } catch (err) {
         console.error('Error fetching posts:', err);
         setError('Failed to load posts. Please try again.');
@@ -118,7 +128,16 @@ const Home = () => {
 
                   {/* Details */}
                   <div className="home-page__post-details">
-                    <h2 className="home-page__post-title">{post.title}</h2>
+                    <h2
+                      className="home-page__post-title"
+                      style={{
+                        color: post.titleStyle?.color || '#000',
+                        fontSize: post.titleStyle?.fontSize || '1.8rem',
+                        textAlign: post.titleStyle?.textAlign || 'left',
+                      }}
+                    >
+                      {post.title}
+                    </h2>
                     <div
                       className="home-page__post-excerpt"
                       dangerouslySetInnerHTML={{
