@@ -85,7 +85,9 @@ const Blog = () => {
       {/* Content Grid */}
       <div className="blog-page__content-wrapper">
         {loading ? (
-          <p className="blog-page__loading-message">Loading posts...</p>
+          <div className="loading-container">
+            <div className="heart-loader"></div>
+          </div>
         ) : error ? (
           <p className="blog-page__error-message">{error}</p>
         ) : filteredPosts.length === 0 ? (
