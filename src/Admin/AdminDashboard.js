@@ -71,8 +71,8 @@ const API_URL = 'https://barkatkamran.com/db.php';
 
 const AdminDashboard = () => {
   const [titleColor, setTitleColor] = useState('#000000'); // Default black color
-const [titleSize, setTitleSize] = useState('24px'); // Default size
-const [titlePosition, setTitlePosition] = useState('center'); // Default center alignment
+  const [titleSize, setTitleSize] = useState('24px'); // Default size
+  const [titlePosition, setTitlePosition] = useState('center'); // Default center alignment
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -88,16 +88,17 @@ const [titlePosition, setTitlePosition] = useState('center'); // Default center 
   const [currentPostId, setCurrentPostId] = useState(null);
   const [selectedBackgroundColor, setSelectedBackgroundColor] = useState('#ffffff');
   const quillRef = useRef(null);
+  const editorContainerRef = useRef(null); // Ref for the editor container
 
   // Fetch all posts from the backend
   const fetchPosts = useCallback(async () => {
     try {
       const response = await fetch(`${API_URL}?method=GET`);
       if (!response.ok) throw new Error('Failed to fetch posts');
-      
+
       const postData = await response.json();
       console.log('Fetched Posts:', postData); // Debugging
-      
+
       const formattedPosts = postData.map((post) => ({
         ...post,
         titleStyle: post.titleStyle
@@ -105,7 +106,7 @@ const [titlePosition, setTitlePosition] = useState('center'); // Default center 
           : { color: '#000', fontSize: '24px', textAlign: 'center' }, // Default
       }));
       console.log('Formatted Posts with Title Style:', formattedPosts); // Debugging
-      
+
       setAllPosts(formattedPosts);
       setPosts(formattedPosts.filter((post) => post.page === selectedPage));
     } catch (err) {
@@ -115,11 +116,10 @@ const [titlePosition, setTitlePosition] = useState('center'); // Default center 
       setIsLoading(false);
     }
   }, [selectedPage]);
-  
+
   useEffect(() => {
     fetchPosts();
   }, [fetchPosts]);
-  
 
   // Handle image upload
   const handleImageUpload = async (e, insertIntoEditor = false) => {
@@ -309,21 +309,25 @@ const handlePostSubmission = async (e) => {
     }
   };
 
-  // Handle editing a post
-  const handleEdit = (post) => {
-    setTitle(post.title);
-    setContent(persistImageDimensions(post.content));
-    setSelectedPage(post.page || 'Blog');
-    setImageURL(post.imageUrl || '');
-    setEditMode(true);
-    setCurrentPostId(post.id);
-  
-    // Populate title style fields
-    setTitleColor(post.titleStyle?.color || '#000000');
-    setTitleSize(post.titleStyle?.fontSize || '24px');
-    setTitlePosition(post.titleStyle?.textAlign || 'center');
-  };
-   
+    // Handle editing a post
+    const handleEdit = (post) => {
+      // Set editor states based on the post being edited
+      setTitle(post.title);
+      setContent(persistImageDimensions(post.content));
+      setSelectedPage(post.page || 'Blog');
+      setImageURL(post.imageUrl || '');
+      setSelectedBackgroundColor(post.backgroundColor || '#ffffff'); // Preserve background color
+      setEditMode(true);
+      setCurrentPostId(post.id);
+    
+      // Populate title style fields
+      setTitleColor(post.titleStyle?.color || '#000000');
+      setTitleSize(post.titleStyle?.fontSize || '24px');
+      setTitlePosition(post.titleStyle?.textAlign || 'center');
+    
+      // Scroll to the editor
+      editorContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };    
 
   // Reset form to initial state
   const resetForm = () => {
@@ -404,7 +408,11 @@ return (
     </div>
 
     {/* Post Form */}
-    <form onSubmit={handlePostSubmission} className="post-form">
+    <form
+      onSubmit={handlePostSubmission}
+      className="post-form"
+      ref={editorContainerRef} // Ref for scrolling to editor
+    >
       {/* Post Title */}
       <input
         type="text"
@@ -425,93 +433,94 @@ return (
         <img src={imageURL} alt="Uploaded" className="uploaded-image" />
       )}
 
-     {/* Rich Text Editor */}
-<div className="editor-container">
-  <label htmlFor="rich-editor" className="form-label">
-    Write Content:
-  </label>
-  <ReactQuill
-    ref={quillRef}
-    value={content}
-    onChange={setContent}
-    theme="snow"
-    modules={modules}
-    className="quill-editor"
-  />
-</div>
+      {/* Rich Text Editor */}
+      <div className="editor-container">
+        <label htmlFor="rich-editor" className="form-label">
+          Write Content:
+        </label>
+        <ReactQuill
+          ref={quillRef}
+          value={content}
+          onChange={setContent}
+          theme="snow"
+          modules={modules}
+          className="quill-editor"
+        />
+      </div>
 
-<div className="form-group title-style-group">
-  <label htmlFor="title-color" className="form-label">Title Color:</label>
-  <input
-    type="color"
-    id="title-color"
-    value={titleColor}
-    onChange={(e) => setTitleColor(e.target.value)}
-    className="color-picker"
-  />
+      {/* Title Styling */}
+      <div className="form-group title-style-group">
+        <label htmlFor="title-color" className="form-label">Title Color:</label>
+        <input
+          type="color"
+          id="title-color"
+          value={titleColor}
+          onChange={(e) => setTitleColor(e.target.value)}
+          className="color-picker"
+        />
 
-  <label htmlFor="title-size" className="form-label">Title Font Size:</label>
-  <select
-    id="title-size"
-    value={titleSize}
-    onChange={(e) => setTitleSize(e.target.value)}
-    className="size-select"
-  >
-    <option value="16px">Small</option>
-    <option value="24px">Medium</option>
-    <option value="36px">Large</option>
-    <option value="48px">Extra Large</option>
-  </select>
+        <label htmlFor="title-size" className="form-label">Title Font Size:</label>
+        <select
+          id="title-size"
+          value={titleSize}
+          onChange={(e) => setTitleSize(e.target.value)}
+          className="size-select"
+        >
+          <option value="16px">Small</option>
+          <option value="24px">Medium</option>
+          <option value="36px">Large</option>
+          <option value="48px">Extra Large</option>
+        </select>
 
-  <label htmlFor="title-position" className="form-label">Title Alignment:</label>
-  <select
-    id="title-position"
-    value={titlePosition}
-    onChange={(e) => setTitlePosition(e.target.value)}
-    className="position-select"
-  >
-    <option value="left">Left</option>
-    <option value="center">Center</option>
-    <option value="right">Right</option>
-  </select>
-</div>
+        <label htmlFor="title-position" className="form-label">Title Alignment:</label>
+        <select
+          id="title-position"
+          value={titlePosition}
+          onChange={(e) => setTitlePosition(e.target.value)}
+          className="position-select"
+        >
+          <option value="left">Left</option>
+          <option value="center">Center</option>
+          <option value="right">Right</option>
+        </select>
+      </div>
 
-{/* Page Selection */}
-<div className="form-group page-select-group">
-  <label htmlFor="page-select" className="form-label">
-    Select Page:
-  </label>
-  <select
-    id="page-select"
-    value={selectedPage}
-    onChange={(e) => setSelectedPage(e.target.value)}
-    className="page-select"
-  >
-    <option value="Blog">Blog</option>
-    <option value="Products Review">Products Review</option>
-    <option value="Recipe">Recipe</option>
-  </select>
-</div>
+      {/* Page Selection */}
+      <div className="form-group page-select-group">
+        <label htmlFor="page-select" className="form-label">
+          Select Page:
+        </label>
+        <select
+          id="page-select"
+          value={selectedPage}
+          onChange={(e) => setSelectedPage(e.target.value)}
+          className="page-select"
+        >
+          <option value="Blog">Blog</option>
+          <option value="Products Review">Products Review</option>
+          <option value="Recipe">Recipe</option>
+        </select>
+      </div>
 
-{/* Theme Background Color Selection */}
-<div className="form-group theme-select-group">
-  <label htmlFor="theme-select" className="form-label">
-    Select Background Theme:
-  </label>
-  <select
-    id="theme-select"
-    onChange={(e) => applyTheme(e.target.value)}
-    className="page-select"
-  >
-    <option value="#ffffff">Default</option>
-    <option value="#e0f7fa">Blue</option>
-    <option value="#e8f5e9">Green</option>
-    <option value="#eceff1">Gray</option>
-    <option value="#006a7a">Blue-Green Cyan</option>
-    <option value="#6568a6">Slat Blue</option>
-    <option value="#c299c0">Pastel Lavender</option>
-  </select>
-</div>
+      {/* Theme Background Color Selection */}
+      <div className="form-group theme-select-group">
+        <label htmlFor="theme-select" className="form-label">
+          Select Background Theme:
+        </label>
+        <select
+          id="theme-select"
+          onChange={(e) => applyTheme(e.target.value)}
+          className="page-select"
+        >
+          <option value="#ffffff">Default</option>
+          <option value="#e0f7fa">Blue</option>
+          <option value="#e8f5e9">Green</option>
+          <option value="#eceff1">Gray</option>
+          <option value="#006a7a">Blue-Green Cyan</option>
+          <option value="#6568a6">Slate Blue</option>
+          <option value="#c299c0">Pastel Lavender</option>
+        </select>
+      </div>
 
       {/* Submit Button */}
       <button type="submit" className="submit-button">
@@ -536,15 +545,15 @@ return (
           >
             {/* Post Title */}
             <h4
-  className="post-title"
-  style={{
-    color: post.titleStyle?.color || '#000', // Default to black
-    fontSize: post.titleStyle?.fontSize || '24px', // Default size
-    textAlign: post.titleStyle?.textAlign || 'center', // Default alignment
-  }}
->
-  {post.title}
-</h4>
+              className="post-title"
+              style={{
+                color: post.titleStyle?.color || '#000', // Default to black
+                fontSize: post.titleStyle?.fontSize || '24px', // Default size
+                textAlign: post.titleStyle?.textAlign || 'center', // Default alignment
+              }}
+            >
+              {post.title}
+            </h4>
 
             {/* Post Content */}
             <PostContent content={post.content} />
@@ -585,5 +594,4 @@ return (
   </div>
 );
 }
-
 export default AdminDashboard;
