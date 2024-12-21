@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom'; // To handle query parameters
 import Header from '../components/Header'; // Import Header component
 import '../Recipe.css'; // Import the scoped CSS for the Recipe page
 
@@ -11,6 +12,12 @@ const Recipe = () => {
   const [tags, setTags] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+
+  const location = useLocation(); // To access query parameters from the URL
+
+  // Extract `id` from URL query parameters for scrolling
+  const queryParams = new URLSearchParams(location.search);
+  const postIdFromQuery = queryParams.get('id');
 
   // Fetch Recipe posts on mount
   useEffect(() => {
@@ -38,6 +45,16 @@ const Recipe = () => {
         setTags(uniqueTags);
 
         if (recipePosts.length === 0) setError('No posts found for the Recipe page.');
+
+        // Scroll to the specific post if `id` is provided in the query
+        if (postIdFromQuery) {
+          setTimeout(() => {
+            const element = document.getElementById(`post-${postIdFromQuery}`);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 500); // Delay ensures DOM is rendered
+        }
       } catch (err) {
         console.error('Error fetching posts:', err);
         setError('Failed to load posts. Please try again.');
@@ -47,7 +64,7 @@ const Recipe = () => {
     };
 
     fetchPosts();
-  }, []);
+  }, [postIdFromQuery]);
 
   // Search functionality
   const handleSearch = (searchTerm) => {
@@ -98,11 +115,21 @@ const Recipe = () => {
             {filteredPosts.map((post) => (
               <div
                 key={post.id}
+                id={`post-${post.id}`} // Add unique ID for scrolling
                 className="recipe-page__card"
                 style={{ backgroundColor: post.backgroundColor || '#fafafa' }}
               >
                 {/* Title */}
-                <h2 className="recipe-page__title">{post.title}</h2>
+                <h2
+                  className="recipe-page__title"
+                  style={{
+                    color: post.titleStyle?.color || '#000',
+                    fontSize: post.titleStyle?.fontSize || '1.5rem',
+                    textAlign: post.titleStyle?.textAlign || 'left',
+                  }}
+                >
+                  {post.title}
+                </h2>
 
                 {/* Content */}
                 <div
