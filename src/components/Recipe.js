@@ -31,7 +31,14 @@ const Recipe = () => {
         const data = await response.json();
         console.log('Fetched Recipe Posts:', data); // Debug fetched posts
 
-        const recipePosts = data.filter((post) => post.page === 'Recipe');
+        const recipePosts = data
+          .filter((post) => post.page === 'Recipe')
+          .map((post) => ({
+            ...post,
+            titleStyle: post.titleStyle
+              ? JSON.parse(post.titleStyle) // Parse `titleStyle` if it exists
+              : { color: '#000', fontSize: '1.5rem', textAlign: 'left' }, // Default style
+          }));
 
         // Set posts and filtered posts
         setPosts(recipePosts);
