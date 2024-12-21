@@ -39,12 +39,14 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out;
+  background-color: #fff; /* Ensure a consistent default background */
+  transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
   cursor: pointer;
 }
 
 .home-page__post-item:hover {
   transform: scale(1.02);
+  background-color: #f9f9f9; /* Slight hover effect for clarity */
 }
 
 .home-page__post-image {
@@ -60,16 +62,22 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 0; /* Added to avoid layout squeezing */
+  min-width: 0; /* Prevent layout squeezing */
 }
 
+/* Post Title */
 .home-page__post-title {
   font-size: 1.8rem;
   font-weight: bold;
   margin-bottom: 10px;
   color: #333;
+  word-wrap: break-word; /* Ensure long words break correctly */
+  text-align: left; /* Default alignment */
+  line-height: 1.4; /* Improve readability */
+  transition: all 0.3s ease-in-out; /* Smooth transitions for dynamic styles */
 }
 
+/* Post Excerpt */
 .home-page__post-excerpt {
   font-size: 1rem;
   color: #555;
@@ -79,6 +87,7 @@
   overflow: visible; /* Ensure full content visibility */
 }
 
+/* Call-to-Action Button */
 .home-page__cta-button {
   background-color: #0b9299;
   color: white;
