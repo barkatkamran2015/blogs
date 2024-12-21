@@ -99,64 +99,70 @@ const Recipe = () => {
 
   return (
     <div className="recipe-page">
-      {/* Header with Search and Filters */}
-      <div className="recipe-page__search-container">
-        <Header
-          onSearch={handleSearch}
-          onFilterApply={handleFilterApply}
-          categories={categories}
-          tags={tags}
-        />
-      </div>
-
-      {/* Content Section */}
-      <div className="recipe-page__content-wrapper">
-        {loading ? (
-          <p className="recipe-page__loading-message">Loading posts...</p>
-        ) : error ? (
-          <p className="recipe-page__error-message">{error}</p>
-        ) : filteredPosts.length === 0 ? (
-          <p className="recipe-page__no-posts-message">No posts available</p>
-        ) : (
-          <div className="recipe-page__grid">
-            {filteredPosts.map((post) => (
-              <div
-                key={post.id}
-                id={`post-${post.id}`} // Add unique ID for scrolling
-                className="recipe-page__card"
-                style={{ backgroundColor: post.backgroundColor || '#fafafa' }}
-              >
-                {/* Title */}
-                <h2
-                  className="recipe-page__title"
-                  style={{
-                    color: post.titleStyle?.color || '#000',
-                    fontSize: post.titleStyle?.fontSize || '1.5rem',
-                    textAlign: post.titleStyle?.textAlign || 'left',
-                  }}
-                >
-                  {post.title}
-                </h2>
-
-                {/* Content */}
-                <div
-                  className="recipe-page__content"
-                  dangerouslySetInnerHTML={{ __html: post.content }}
-                />
-
-                {/* Image */}
-                {post.imageUrl && (
-                  <img
-                    src={post.imageUrl}
-                    alt={post.title}
-                    className="recipe-page__image"
-                  />
-                )}
-              </div>
-            ))}
+      {loading ? (
+        <div className="loading-container">
+          <div className="heart-loader"></div>
+        </div>
+      ) : (
+        <>
+          {/* Header with Search and Filters */}
+          <div className="recipe-page__search-container">
+            <Header
+              onSearch={handleSearch}
+              onFilterApply={handleFilterApply}
+              categories={categories}
+              tags={tags}
+            />
           </div>
-        )}
-      </div>
+
+          {/* Content Section */}
+          <div className="recipe-page__content-wrapper">
+            {error ? (
+              <p className="recipe-page__error-message">{error}</p>
+            ) : filteredPosts.length === 0 ? (
+              <p className="recipe-page__no-posts-message">No posts available</p>
+            ) : (
+              <div className="recipe-page__grid">
+                {filteredPosts.map((post) => (
+                  <div
+                    key={post.id}
+                    id={`post-${post.id}`} // Add unique ID for scrolling
+                    className="recipe-page__card"
+                    style={{ backgroundColor: post.backgroundColor || '#fafafa' }}
+                  >
+                    {/* Title */}
+                    <h2
+                      className="recipe-page__title"
+                      style={{
+                        color: post.titleStyle?.color || '#000',
+                        fontSize: post.titleStyle?.fontSize || '1.5rem',
+                        textAlign: post.titleStyle?.textAlign || 'left',
+                      }}
+                    >
+                      {post.title}
+                    </h2>
+
+                    {/* Content */}
+                    <div
+                      className="recipe-page__content"
+                      dangerouslySetInnerHTML={{ __html: post.content }}
+                    />
+
+                    {/* Image */}
+                    {post.imageUrl && (
+                      <img
+                        src={post.imageUrl}
+                        alt={post.title}
+                        className="recipe-page__image"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };
