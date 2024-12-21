@@ -113,6 +113,52 @@ body {
   color: red;
 }
 
+/* Heart Loader Styling */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  background-color: #fff; /* Optional: White background for loader */
+}
+
+.heart-loader {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  transform: rotate(-45deg);
+  animation: beat 1s infinite;
+}
+
+.heart-loader::before,
+.heart-loader::after {
+  content: '';
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: red;
+  border-radius: 50%;
+}
+
+.heart-loader::before {
+  top: -25px;
+  left: 0;
+}
+
+.heart-loader::after {
+  left: 25px;
+  top: 0;
+}
+
+@keyframes beat {
+  0%, 100% {
+    transform: scale(1) rotate(-45deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(-45deg);
+  }
+}
+
 /* Responsive Design */
 /* Medium Devices (Tablets) */
 @media screen and (max-width: 768px) {
@@ -170,7 +216,7 @@ body {
   }
 
   .recipe-page__image {
-    height: auto; /* Smaller image height for phones */
+    height: 150px; /* Smaller image height for phones */
   }
 
   .recipe-page__card {
