@@ -26,7 +26,16 @@ const ProductsReview = () => {
         const data = await response.json();
         console.log('Fetched Products Review Posts:', data); // Debug fetched data
 
-        const productsReviewPosts = data.filter((post) => post.page === 'Products Review');
+        // Format and map posts with title styles
+        const productsReviewPosts = data
+          .filter((post) => post.page === 'Products Review')
+          .map((post) => ({
+            ...post,
+            titleStyle: post.titleStyle
+              ? JSON.parse(post.titleStyle) // Parse `titleStyle` if it exists
+              : { color: '#000', fontSize: '1.5rem', textAlign: 'left' }, // Default style
+          }));
+
         setPosts(productsReviewPosts);
         setFilteredPosts(productsReviewPosts);
 
@@ -95,9 +104,9 @@ const ProductsReview = () => {
                 <h2
                   className="products-review__title"
                   style={{
-                    color: post.titleStyle?.color || '#000',
-                    fontSize: post.titleStyle?.fontSize || '1.5rem',
-                    textAlign: post.titleStyle?.textAlign || 'left',
+                    color: post.titleStyle?.color || '#000', // Apply color
+                    fontSize: post.titleStyle?.fontSize || '1.5rem', // Apply font size
+                    textAlign: post.titleStyle?.textAlign || 'left', // Apply alignment
                   }}
                 >
                   {post.title}
