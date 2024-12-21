@@ -26,7 +26,15 @@ const Blog = () => {
 
         const data = await response.json();
         console.log('Fetched Posts:', data); // Debug fetched posts
-        const blogPosts = data.filter((post) => post.page === 'Blog');
+
+        const blogPosts = data
+          .filter((post) => post.page === 'Blog')
+          .map((post) => ({
+            ...post,
+            titleStyle: post.titleStyle
+              ? JSON.parse(post.titleStyle) // Parse `titleStyle` if it exists
+              : { color: '#000', fontSize: '1.5rem', textAlign: 'left' }, // Default style
+          }));
 
         setPosts(blogPosts);
         setFilteredPosts(blogPosts);
@@ -94,9 +102,9 @@ const Blog = () => {
                 <h3
                   className="blog-page__title"
                   style={{
-                    color: post.titleStyle?.color || '#000',
-                    fontSize: post.titleStyle?.fontSize || '1.5rem',
-                    textAlign: post.titleStyle?.textAlign || 'left',
+                    color: post.titleStyle?.color || '#000', // Title color
+                    fontSize: post.titleStyle?.fontSize || '1.5rem', // Font size
+                    textAlign: post.titleStyle?.textAlign || 'left', // Text alignment
                   }}
                 >
                   {post.title}
