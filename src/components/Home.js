@@ -67,10 +67,11 @@ const Home = () => {
     setFilteredPosts(results);
   };
 
-  // Navigate to specific page (without postId)
-  const navigateToPost = (page) => {
+  // Navigate to specific page (with postId)
+  const navigateToPost = (page, postId) => {
     const basePath = pagePaths[page] || '/';
-    window.location.href = basePath;
+    const targetPath = `${basePath}?id=${postId}`; // Include postId in query parameter
+    window.location.href = targetPath;
   };
 
   return (
@@ -131,7 +132,7 @@ const Home = () => {
                     <h2
                       className="home-page__post-title"
                       style={{
-                        color: post.titleStyle?.color || '#000',
+                        color: post.titleStyle?.color || '#333',
                         fontSize: post.titleStyle?.fontSize || '1.8rem',
                         textAlign: post.titleStyle?.textAlign || 'left',
                       }}
@@ -147,7 +148,7 @@ const Home = () => {
                     {/* Read More Button */}
                     <button
                       className="home-page__cta-button"
-                      onClick={() => navigateToPost(post.page)} // Redirects to the page path only
+                      onClick={() => navigateToPost(post.page, post.id)} // Include post ID for navigation
                     >
                       Read More
                     </button>
