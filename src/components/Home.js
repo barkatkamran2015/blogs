@@ -6,9 +6,9 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 // Static Images for Slider
-import imageBlog from '../assets/blog.jpg';
-import imageNature from '../assets/nature.jpg';
-import imageRecipe from '../assets/recipe.jpg';
+import imageBlog from '../assets/bedroom.jpeg';
+import imageNature from '../assets/parenting.jpeg';
+import imageRecipe from '../assets/kitchen.jpeg';
 
 const API_URL = 'https://barkatkamran.com/db.php';
 
