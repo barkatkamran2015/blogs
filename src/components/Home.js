@@ -139,6 +139,12 @@ const Home = () => {
                     >
                       {post.title}
                     </h2>
+
+                    {/* Display Created Date */}
+                    <p className="home-page__post-meta">
+                      Published on {new Date(post.created_at).toLocaleDateString()}
+                    </p>
+
                     <div
                       className="home-page__post-excerpt"
                       dangerouslySetInnerHTML={{
