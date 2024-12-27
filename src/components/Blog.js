@@ -6,12 +6,10 @@ import '../Blog.css';
 const API_URL = 'https://barkatkamran.com/db.php';
 
 const Blog = () => {
-  const [posts, setPosts] = useState([]); // Store all posts
-  const [filteredPosts, setFilteredPosts] = useState([]); // Filtered posts for search
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(''); // Error state
-  const [comments, setComments] = useState({}); // Comments mapped by post ID
-  const [newComments, setNewComments] = useState({}); // New comments per post
+  const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
@@ -33,6 +31,7 @@ const Blog = () => {
             : { color: '#000', fontSize: '1.5rem', textAlign: 'left' },
         }));
 
+        console.log('Posts fetched:', formattedPosts);
         setPosts(formattedPosts);
         setFilteredPosts(formattedPosts);
 
@@ -69,50 +68,13 @@ const Blog = () => {
     }
   };
 
-  // Fetch comments for a specific post
-  const fetchComments = async (postId) => {
-    try {
-      const response = await fetch(`${API_URL}?comments_for_post=${postId}`);
-      if (!response.ok) throw new Error('Failed to fetch comments');
-      const data = await response.json();
-      setComments((prev) => ({ ...prev, [postId]: data }));
-    } catch (err) {
-      console.error('Error fetching comments:', err);
-    }
-  };
-
-  // Add a new comment to a specific post
-  const addComment = async (postId) => {
-    const newComment = newComments[postId];
-    if (!newComment || !newComment.trim()) return;
-
-    try {
-      const response = await fetch(`${API_URL}?method=POST_COMMENT`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          post_id: postId,
-          creator_name: 'Anonymous', // You can replace this with an actual user system
-          comment_text: newComment,
-        }),
-      });
-      if (!response.ok) throw new Error('Failed to add comment');
-      const updatedComments = await response.json();
-
-      // Update comments in state
-      setComments((prev) => ({ ...prev, [postId]: updatedComments }));
-      setNewComments((prev) => ({ ...prev, [postId]: '' })); // Clear input field
-    } catch (err) {
-      console.error('Error adding comment:', err);
-    }
-  };
-
   // Increment view count for a post
   const incrementViewCount = async (postId) => {
     try {
       await fetch(`${API_URL}?method=INCREMENT_VIEW_COUNT&postId=${postId}`, {
         method: 'POST',
       });
+      console.log(`View count incremented for post ${postId}`);
     } catch (err) {
       console.error('Error incrementing view count:', err);
     }
@@ -130,7 +92,10 @@ const Blog = () => {
             <div className="heart-loader"></div>
           </div>
         ) : error ? (
-          <p className="blog-page__error-message">{error}</p>
+          <div className="blog-page__error-message">
+            <p>{error}</p>
+            <button onClick={() => window.location.reload()}>Retry</button>
+          </div>
         ) : filteredPosts.length === 0 ? (
           <p className="blog-page__no-posts-message">No posts available</p>
         ) : (
@@ -143,7 +108,6 @@ const Blog = () => {
                 style={{ backgroundColor: post.backgroundColor || '#fafafa' }}
                 onMouseEnter={() => {
                   incrementViewCount(post.id);
-                  fetchComments(post.id); // Fetch comments when hovering
                 }}
               >
                 <h3
@@ -169,34 +133,6 @@ const Blog = () => {
                 )}
 
                 <p className="blog-page__meta">Views: {post.views || 0}</p>
-
-                {/* Comments Section */}
-                <div className="blog-page__comments">
-                  <h4>Comments:</h4>
-                  {comments[post.id]?.length > 0 ? (
-                    <ul>
-                      {comments[post.id].map((comment) => (
-                        <li key={comment.id}>
-                          <strong>{comment.creator_name}:</strong> {comment.comment_text}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No comments yet. Be the first to comment!</p>
-                  )}
-
-                  <textarea
-                    value={newComments[post.id] || ''}
-                    onChange={(e) =>
-                      setNewComments((prev) => ({
-                        ...prev,
-                        [post.id]: e.target.value,
-                      }))
-                    }
-                    placeholder="Write your comment..."
-                  />
-                  <button onClick={() => addComment(post.id)}>Add Comment</button>
-                </div>
               </div>
             ))}
           </div>
