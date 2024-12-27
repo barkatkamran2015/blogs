@@ -95,7 +95,6 @@ body {
   display: block; /* Fix inline-block issues */
 }
 
-/* Heart Loader Styling */
 .loading-container {
   display: flex;
   justify-content: center;
@@ -108,8 +107,9 @@ body {
   position: relative;
   width: 50px;
   height: 50px;
+  background-color: red;
   transform: rotate(-45deg);
-  animation: beat 1s infinite;
+  animation: beat 1s infinite ease-in-out;
 }
 
 .heart-loader::before,
@@ -118,7 +118,7 @@ body {
   position: absolute;
   width: 50px;
   height: 50px;
-  background: red;
+  background-color: red;
   border-radius: 50%;
 }
 
@@ -128,8 +128,8 @@ body {
 }
 
 .heart-loader::after {
-  left: 25px;
   top: 0;
+  left: 25px;
 }
 
 /* View Count Styling */
@@ -139,75 +139,6 @@ body {
   margin-bottom: 10px;
 }
 
-/* Comments Section Container */
-.blog-page__comments {
-  margin-top: 20px;
-  padding: 15px;
-  border-top: 1px solid #ddd;
-  background-color: #e8f5e9;
-  border-radius: 8px;
-}
-
-/* Comments Header */
-.blog-page__comments h4 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-/* Comments List */
-.blog-page__comments ul {
-  padding: 0;
-  margin: 0 0 10px;
-  list-style: none;
-}
-
-.blog-page__comments ul li {
-  font-size: 0.95rem;
-  margin-bottom: 8px;
-  padding: 8px;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  color: #333;
-}
-
-/* No Comments Message */
-.blog-page__comments p {
-  font-size: 0.95rem;
-  color: #666;
-  margin-bottom: 10px;
-}
-
-/* Comment Textarea */
-.blog-page__comments textarea {
-  width: 100%;
-  padding: 10px;
-  font-size: 1rem;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  resize: vertical;
-  box-sizing: border-box;
-}
-
-/* Add Comment Button */
-.blog-page__comments button {
-  padding: 8px 15px;
-  font-size: 1rem;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.blog-page__comments button:hover {
-  background-color: #0056b3;
-}
-
-
 @keyframes beat {
   0%, 100% {
     transform: scale(1) rotate(-45deg);
@@ -216,7 +147,6 @@ body {
     transform: scale(1.2) rotate(-45deg);
   }
 }
-
 
 /* Medium Devices (Tablets) */
 @media screen and (max-width: 1024px) {
