@@ -13,6 +13,7 @@ import PostEditor from "./Admin/PostEditor";
 import Blog from "./components/Blog";
 import Recipe from "./components/Recipe";
 import ProductsReview from "./components/ProductsReview";
+import StyleAdvisor from "./components/StyleAdvisor"; // Import StyleAdvisor component
 import { auth } from "./Admin/firebaseConfig";
 
 // Protected Route component to handle authentication checks
@@ -40,7 +41,7 @@ const ProtectedRoute = ({ children }) => {
 // Footer Wrapper to handle conditional rendering
 const FooterWrapper = () => {
   const location = useLocation();
-  
+
   // Define the routes where the footer should NOT appear
   const noFooterRoutes = ["/login", "/signup"];
 
@@ -68,6 +69,7 @@ const App = () => {
             <Route path="/recipe" element={<Recipe />} />
             <Route path="/products-review" element={<ProductsReview />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/style-advisor" element={<StyleAdvisor />} /> {/* New Route */}
             <Route path="/login" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
 
