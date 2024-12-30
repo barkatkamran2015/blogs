@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
-import imageLogo from '../assets/logo1.png';
+import imageLogo from '../assets/logo3.png';
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -29,6 +29,7 @@ const Navbar = () => {
     { label: 'Recipe', path: '/recipe' },
     { label: 'Blog', path: '/blog' },
     { label: 'Products Review', path: '/products-review' },
+    { label: 'A.I Style Advisor', path: '/style-advisor' },
     { label: 'Contact', path: '/contact' },
   ];
 
