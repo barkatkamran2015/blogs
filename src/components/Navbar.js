@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
-import imageLogo from '../assets/logo3.png';
+import imageLogo from '../assets/logo1.png';
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
