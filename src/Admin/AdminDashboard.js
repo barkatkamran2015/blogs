@@ -254,11 +254,11 @@ const handlePostSubmission = async (e) => {
 
     // 4. Send request to the server
     const method = editMode ? 'PUT' : 'POST'; // Use PUT for editing, POST for creating
-    const response = await fetch(API_URL, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestBody),
-    });
+   const response = await fetch(`${API_URL}?method=CREATE_POST`, {
+    method: 'POST', // Ensure 'POST' for creating a post
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(requestBody),
+});
 
     console.log('Server Response Status:', response.status); // Debug response status
 
