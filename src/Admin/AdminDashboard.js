@@ -41,28 +41,31 @@ Quill.register(Size, true);
  
  // Helper Component: PostContent
  const PostContent = ({ content }) => {
+  // Sanitize the content
   const sanitizedContent = DOMPurify.sanitize(content, {
-    ALLOWED_TAGS: ['img', 'p', 'div', 'span', 'br', 'strong', 'em', 'a', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li'],
-    ALLOWED_ATTR: ['src', 'width', 'height', 'alt', 'style', 'class', 'align'],
-  });  
+      ALLOWED_TAGS: ['img', 'p', 'div', 'span', 'br', 'strong', 'em', 'a', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li'],
+      ALLOWED_ATTR: ['src', 'width', 'height', 'alt', 'style', 'class', 'align'],
+  });
 
+  // Parse the sanitized content
   const parser = new DOMParser();
   const doc = parser.parseFromString(sanitizedContent, 'text/html');
 
+  // Ensure images retain dimensions
   doc.querySelectorAll('img').forEach((img) => {
-    const width = img.getAttribute('width');
-    const height = img.getAttribute('height');
-    if (width || height) {
-      img.style.width = width ? `${width}px` : 'auto';
-      img.style.height = height ? `${height}px` : 'auto';
-    }
+      const width = img.getAttribute('width');
+      const height = img.getAttribute('height');
+      if (width || height) {
+          img.style.width = width ? `${width}px` : 'auto';
+          img.style.height = height ? `${height}px` : 'auto';
+      }
   });
 
   return (
-    <div
-      className="post-content"
-      dangerouslySetInnerHTML={{ __html: doc.body.innerHTML }}
-    />
+      <div
+          className="post-content"
+          dangerouslySetInnerHTML={{ __html: doc.body.innerHTML }}
+      />
   );
 };
 
@@ -254,11 +257,11 @@ const handlePostSubmission = async (e) => {
 
     // 4. Send request to the server
     const method = editMode ? 'PUT' : 'POST'; // Use PUT for editing, POST for creating
-   const response = await fetch(`${API_URL}?method=CREATE_POST`, {
-    method: 'POST', // Ensure 'POST' for creating a post
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(requestBody),
-});
+    const response = await fetch(API_URL, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+    });
 
     console.log('Server Response Status:', response.status); // Debug response status
 
@@ -316,7 +319,7 @@ const handlePostSubmission = async (e) => {
       setContent(persistImageDimensions(post.content));
       setSelectedPage(post.page || 'Blog');
       setImageURL(post.imageUrl || '');
-      setSelectedBackgroundColor(post.backgroundColor || '#ffffff'); // Preserve background color
+      setSelectedBackgroundColor(post.backgroundColor || '#ffffff');
       setEditMode(true);
       setCurrentPostId(post.id);
     
