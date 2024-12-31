@@ -1,136 +1,143 @@
-import React, { useState } from 'react';
-import '../StyleAdvisor.css'; // Add appropriate styling
+import React, { useState } from "react";
+import "../StyleAdvisor.css"; // Ensure styling matches your design preferences
 
 const StyleAdvisor = () => {
-  const [event, setEvent] = useState('');
-  const [weather, setWeather] = useState('');
-  const [gender, setGender] = useState('');
-  const [timeOfDay, setTimeOfDay] = useState('');
-  const [suggestions, setSuggestions] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [userQuery, setUserQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [feedbackEnabled, setFeedbackEnabled] = useState(false); // Feedback toggle
+  const [lastRecommendation, setLastRecommendation] = useState(null); // Save last recommendation for feedback
 
-  const handleGetAdvice = () => {
-    const outfitSuggestions = {
-      casual: {
-        sunny: {
-          morning: {
-            male: 'T-shirt, chinos, and loafers.',
-            female: 'Light blouse, shorts, and sandals.',
-          },
-          evening: {
-            male: 'Short-sleeve shirt, jeans, and sneakers.',
-            female: 'Maxi dress with comfortable flats.',
-          },
-        },
-        rainy: {
-          morning: {
-            male: 'Waterproof jacket, jeans, and boots.',
-            female: 'Raincoat, leggings, and ankle boots.',
-          },
-          evening: {
-            male: 'Sweater, waterproof jacket, and sturdy boots.',
-            female: 'Stylish raincoat over a casual dress and boots.',
-          },
-        },
-      },
-      formal: {
-        sunny: {
-          morning: {
-            male: 'Light-colored suit with loafers.',
-            female: 'Floral cocktail dress and heels.',
-          },
-          evening: {
-            male: 'Classic black suit and polished shoes.',
-            female: 'Elegant evening gown with accessories.',
-          },
-        },
-        rainy: {
-          morning: {
-            male: 'Dark suit with a raincoat.',
-            female: 'Sophisticated knee-length dress with a stylish jacket.',
-          },
-          evening: {
-            male: 'Charcoal suit with a trench coat.',
-            female: 'Formal evening dress and matching overcoat.',
-          },
-        },
-      },
-    };
+  const handleSendMessage = async () => {
+    if (!userQuery.trim()) {
+      alert("Please enter your query.");
+      return;
+    }
 
-    const result =
-      outfitSuggestions[event]?.[weather]?.[timeOfDay]?.[gender] ||
-      'Sorry, we don’t have outfit suggestions for this combination yet.';
-    setSuggestions(result);
+    // Add user message to the chat
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { sender: "user", text: userQuery },
+    ]);
+    setUserQuery("");
+    setLoading(true);
+    setFeedbackEnabled(false); // Disable feedback during the query process
+
+    try {
+      const response = await fetch("https://barkatkamran.com/recommendations_api.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: userQuery }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Backend Error: ${errorData.message}`);
+      }
+
+      const data = await response.json();
+
+      if (data.error) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "bot", text: "No advice available for your query." },
+        ]);
+      } else {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            sender: "bot",
+            text: data.outfit_description || data.gift_suggestion || "No advice available.",
+          },
+        ]);
+        setLastRecommendation(data); // Save the last recommendation for feedback
+        setFeedbackEnabled(true); // Enable feedback
+      }
+    } catch (error) {
+      console.error("Fetch Error:", error);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { sender: "bot", text: `An error occurred: ${error.message}` },
+      ]);
+    }
+
+    setLoading(false);
+  };
+
+  const handleFeedback = async (feedbackScore) => {
+    if (!lastRecommendation) {
+      alert("No recommendation to provide feedback on.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "https://barkatkamran.com/recommendations_api.php?action=feedback",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            recommendation_id: lastRecommendation.id,
+            query: lastRecommendation.query,
+            feedback_score: feedbackScore,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to submit feedback.");
+      }
+
+      alert("Thank you for your feedback!");
+    } catch (error) {
+      console.error("Feedback Error:", error);
+      alert("Failed to submit feedback. Please try again.");
+    }
   };
 
   return (
-    <div className="style-advisor">
-      <h1>Style Advisor</h1>
-      <p>Find the perfect outfit for any occasion!</p>
-
-      <div className="form-container">
-        <div className="form-group">
-          <label htmlFor="event">What’s the occasion?</label>
-          <select
-            id="event"
-            value={event}
-            onChange={(e) => setEvent(e.target.value)}
-          >
-            <option value="">-- Select Event --</option>
-            <option value="casual">Casual</option>
-            <option value="formal">Formal</option>
-          </select>
+    <div className="chat-wrapper">
+      <div className="chat-container">
+        <div className="chat-header">Style Advisor</div>
+        <div className="chat-content">
+          {messages.length === 0 && (
+            <p className="chat-placeholder">What can I help with?</p>
+          )}
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`chat-message ${
+                message.sender === "user" ? "user-message" : "bot-message"
+              }`}
+            >
+              {message.text}
+            </div>
+          ))}
         </div>
-
-        <div className="form-group">
-          <label htmlFor="weather">What’s the weather?</label>
-          <select
-            id="weather"
-            value={weather}
-            onChange={(e) => setWeather(e.target.value)}
-          >
-            <option value="">-- Select Weather --</option>
-            <option value="sunny">Sunny</option>
-            <option value="rainy">Rainy</option>
-          </select>
+        <div className="chat-input-container">
+          <input
+            type="text"
+            value={userQuery}
+            onChange={(e) => setUserQuery(e.target.value)}
+            placeholder="Message Style Advisor"
+            disabled={loading}
+          />
+          <button onClick={handleSendMessage} disabled={loading}>
+            {loading ? "..." : "Send"}
+          </button>
         </div>
-
-        <div className="form-group">
-          <label htmlFor="timeOfDay">Time of day:</label>
-          <select
-            id="timeOfDay"
-            value={timeOfDay}
-            onChange={(e) => setTimeOfDay(e.target.value)}
-          >
-            <option value="">-- Select Time of Day --</option>
-            <option value="morning">Morning</option>
-            <option value="evening">Evening</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="gender">Your gender:</label>
-          <select
-            id="gender"
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
-          >
-            <option value="">-- Select Gender --</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </div>
-
-        <button onClick={handleGetAdvice} className="get-advice-button">
-          Get Advice
-        </button>
+        {feedbackEnabled && (
+          <div className="feedback-container">
+            <p>Was this helpful?</p>
+            <button onClick={() => handleFeedback(1)} className="feedback-button">
+              👍
+            </button>
+            <button onClick={() => handleFeedback(-1)} className="feedback-button">
+              👎
+            </button>
+          </div>
+        )}
       </div>
-
-      {suggestions && (
-        <div className="suggestions-container">
-          <h2>Outfit Suggestion:</h2>
-          <p>{suggestions}</p>
-        </div>
-      )}
     </div>
   );
 };
