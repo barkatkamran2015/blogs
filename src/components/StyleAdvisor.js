@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../StyleAdvisor.css"; // Add the new CSS here!
+import "../StyleAdvisor.css"; // Use updated CSS
 
 const StyleAdvisor = () => {
   const [messages, setMessages] = useState([]);
@@ -48,13 +48,19 @@ const StyleAdvisor = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !loading) {
+      handleSendMessage();
+    }
+  };
+
   return (
     <div className="chat-wrapper">
       {/* Header Section */}
       <div className="chat-header">
-        <h1>💖 Fashion & Gift Advisor 💝</h1>
+        <h1>Fashion & Gift Advisor</h1>
         <p className="chat-description">
-          Your personalized assistant for fashion tips and gift ideas. Ask anything, from outfit recommendations to the perfect gift for any occasion!
+          Your go-to advisor for fashion tips and perfect gift recommendations. Start a chat to get personalized suggestions tailored to your needs!
         </p>
       </div>
 
@@ -62,7 +68,7 @@ const StyleAdvisor = () => {
       <div className="chat-container">
         <div className="chat-content">
           {messages.length === 0 && (
-            <p className="chat-placeholder">Ask me anything, I'm here to help! 💌</p>
+            <p className="chat-placeholder">Start by asking a question...</p>
           )}
           {messages.map((message, index) => (
             <div
@@ -80,7 +86,8 @@ const StyleAdvisor = () => {
             type="text"
             value={userQuery}
             onChange={(e) => setUserQuery(e.target.value)}
-            placeholder="Ask your fashion or gift question... 💕"
+            onKeyDown={handleKeyDown}
+            placeholder="Type your question here..."
             disabled={loading}
           />
           <button onClick={handleSendMessage} disabled={loading}>
