@@ -25,7 +25,7 @@ const SignUp = () => {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      navigate('/signin'); // Redirect to sign-in page after successful sign-up
+      navigate('/login'); // Redirect to sign-in page after successful sign-up
     } catch (err) {
       setError('Failed to sign up. Please try again.');
       console.error(err);
