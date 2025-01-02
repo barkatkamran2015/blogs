@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../StyleAdvisor.css"; // Use updated CSS
 
 const StyleAdvisor = () => {
   const [messages, setMessages] = useState([]);
   const [userQuery, setUserQuery] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Reference to the chat content container for scrolling
+  const chatContentRef = useRef(null);
 
   const handleSendMessage = async () => {
     if (!userQuery.trim()) {
@@ -22,11 +25,14 @@ const StyleAdvisor = () => {
 
     try {
       // Send query to backend API
-      const response = await fetch("https://barkatkamran.com/openai_recommendations.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: userQuery }),
-      });
+      const response = await fetch(
+        "https://barkatkamran.com/openai_recommendations.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: userQuery }),
+        }
+      );
       const data = await response.json();
 
       if (data.error) {
@@ -36,7 +42,10 @@ const StyleAdvisor = () => {
       // Add AI's response to the chat
       setMessages((prevMessages) => [
         ...prevMessages,
-        { sender: "bot", text: data.response || "I don't have an answer right now." },
+        {
+          sender: "bot",
+          text: data.response || "I don't have an answer right now.",
+        },
       ]);
     } catch (error) {
       setMessages((prevMessages) => [
@@ -54,19 +63,27 @@ const StyleAdvisor = () => {
     }
   };
 
+  // Scroll to the latest message whenever the messages array changes
+  useEffect(() => {
+    if (chatContentRef.current) {
+      chatContentRef.current.scrollTop = chatContentRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   return (
     <div className="chat-wrapper">
       {/* Header Section */}
       <div className="chat-header">
         <h1>Fashion & Gift Advisor</h1>
         <p className="chat-description">
-          Your go-to advisor for fashion tips and perfect gift recommendations. Start a chat to get personalized suggestions tailored to your needs!
+          Your go-to advisor for fashion tips and perfect gift recommendations.
+          Start a chat to get personalized suggestions tailored to your needs!
         </p>
       </div>
 
       {/* Chatbox Section */}
       <div className="chat-container">
-        <div className="chat-content">
+        <div className="chat-content" ref={chatContentRef}>
           {messages.length === 0 && (
             <p className="chat-placeholder">Start by asking a question...</p>
           )}
