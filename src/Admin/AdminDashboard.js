@@ -222,13 +222,12 @@ const handlePostSubmission = async (e) => {
     textAlign: titlePosition,
   });
 
-  // Ensure the title is provided
+  // Ensure the title and content are provided
   if (!title.trim()) {
     setError('Title is required.');
     return;
   }
 
-  // Ensure the content is provided
   if (!content.trim()) {
     setError('Content is required.');
     return;
@@ -260,20 +259,23 @@ const handlePostSubmission = async (e) => {
 
     console.log('Request Payload:', requestBody); // Debugging request payload
 
-    // 4. Send request to the server
+    // 4. Determine endpoint and method
     const endpoint = editMode
-      ? `${API_URL}?method=UPDATE_POST` // Query param for updates
+      ? `${API_URL}?method=UPDATE_POST&id=${currentPostId}` // Query param for updates
       : `${API_URL}?method=CREATE_POST`; // Query param for creation
 
+    const method = editMode ? 'PUT' : 'POST'; // Use PUT for updates and POST for creation
+
+    // 5. Send request to the server
     const response = await fetch(endpoint, {
-      method: 'POST', // Always use POST, as the backend distinguishes by `method` query param
+      method, // Dynamically set the HTTP method
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody),
     });
 
     console.log('Server Response Status:', response.status); // Debug response status
 
-    // 5. Handle server response
+    // 6. Handle server response
     if (!response.ok) {
       const errorText = await response.text(); // Capture additional error information
       throw new Error(`Failed to save post. Server responded with: ${errorText}`);
@@ -282,17 +284,18 @@ const handlePostSubmission = async (e) => {
     const responseData = await response.json(); // Parse JSON response
     console.log('Server Response Data:', responseData); // Debug response data
 
-    // 6. Success: Notify user and refresh posts
-    setSuccessMessage(responseData.message || 'Post saved successfully!');
+    // 7. Success: Notify user and refresh posts
+    setSuccessMessage(responseData.message || (editMode ? 'Post updated successfully!' : 'Post created successfully!'));
     fetchPosts(); // Refresh the posts list
     resetForm(); // Reset the form inputs
   } catch (err) {
     console.error('Error saving post:', err); // Log error for debugging
-    setError(`Failed to save post. Reason: ${err.message}`);
+    setError(`Failed to ${editMode ? 'update' : 'save'} post. Reason: ${err.message}`);
   } finally {
     setIsLoading(false); // Reset loading state
   }
 };
+
   
   // Handle delete post
   const handleDelete = async (postId) => {
