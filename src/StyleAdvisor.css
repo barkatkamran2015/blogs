@@ -9,6 +9,7 @@
   background-color: #eaf7f5; /* Light background */
   padding: 10px;
   box-sizing: border-box;
+  font-family: 'Inter', 'Roboto', sans-serif; /* Modern and clean fonts */
 }
 
 /* Chat header styling */
@@ -27,11 +28,14 @@
 .chat-header h1 {
   font-size: 1.8rem;
   margin: 0;
+  font-weight: 600; /* Bold and clear */
 }
 
 .chat-header .chat-description {
   font-size: 1rem;
   margin: 5px 0 0;
+  font-weight: 400;
+  line-height: 1.4;
 }
 
 /* Chat container */
@@ -77,23 +81,28 @@
 
 /* Chat messages */
 .chat-message {
-  padding: 10px;
+  padding: 12px;
   margin-bottom: 10px;
-  border-radius: 8px;
+  border-radius: 12px;
   max-width: 70%;
   word-wrap: break-word;
-  font-size: 0.9rem;
-  line-height: 1.4;
+  font-size: 1rem; /* Increased font size for readability */
+  line-height: 1.6; /* Better line spacing for easier reading */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .user-message {
   background-color: #d1f5d3;
   align-self: flex-end;
+  color: #005662;
+  font-weight: 500;
 }
 
 .bot-message {
-  background-color: #f1f1f1;
+  background-color: #f9f9f9;
   align-self: flex-start;
+  color: #333;
+  font-weight: 400;
 }
 
 /* Input container */
@@ -102,6 +111,7 @@
   padding: 10px;
   border-top: 1px solid #ddd;
   background: #f9f9f9;
+  box-sizing: border-box;
 }
 
 .chat-input-container input {
@@ -112,6 +122,7 @@
   border-radius: 4px;
   margin-right: 10px;
   box-sizing: border-box;
+  font-family: 'Roboto', sans-serif; /* Consistent font */
 }
 
 .chat-input-container button {
@@ -123,6 +134,8 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-family: 'Inter', sans-serif; /* Clear font for buttons */
+  font-weight: 600; /* Bold for better visibility */
 }
 
 .chat-input-container button:disabled {
@@ -132,4 +145,27 @@
 
 .chat-input-container button:hover:not(:disabled) {
   background-color: #005860;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .chat-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .chat-header .chat-description {
+    font-size: 0.9rem;
+  }
+
+  .chat-message {
+    font-size: 0.9rem;
+  }
+
+  .chat-input-container input {
+    font-size: 0.9rem;
+  }
+
+  .chat-input-container button {
+    font-size: 0.9rem;
+  }
 }
