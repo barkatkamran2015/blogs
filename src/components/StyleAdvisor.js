@@ -45,14 +45,18 @@ const StyleAdvisor = () => {
       const data = await response.json();
 
       if (data.error) {
-        throw new Error(data.message || "Error occurred.");
+        // Handle error response from backend
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "bot", text: data.response },
+        ]);
+      } else {
+        // Add AI's response to the chat
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "bot", text: data.response },
+        ]);
       }
-
-      // Add AI's response to the chat
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: "bot", text: data.response },
-      ]);
     } catch (error) {
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -69,6 +73,7 @@ const StyleAdvisor = () => {
     }
   };
 
+  // Scroll to the latest message whenever the messages array changes
   useEffect(() => {
     if (chatContentRef.current) {
       chatContentRef.current.scrollTop = chatContentRef.current.scrollHeight;
@@ -80,7 +85,7 @@ const StyleAdvisor = () => {
       <div className="chat-header">
         <h1>Fashion & Gift Advisor</h1>
         <p className="chat-description">
-          Your go-to advisor for fashion tips and perfect gift recommendations. Start a chat to get personalized suggestions tailored to your needs!
+          Your go-to advisor for fashion tips and personalized gift recommendations.
         </p>
       </div>
       <div className="chat-container">
