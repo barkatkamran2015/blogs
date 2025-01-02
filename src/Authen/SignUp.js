@@ -12,8 +12,16 @@ const SignUp = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // Toggle this flag to disable signups
+  const isSignupDisabled = true; // Change to `false` to enable signups again
+
   const handleSignUp = async (e) => {
     e.preventDefault();
+    if (isSignupDisabled) {
+      setError('Signups are temporarily disabled. Please try again later.');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
@@ -35,27 +43,36 @@ const SignUp = () => {
   };
 
   return (
-    <Grid 
-      container 
-      justifyContent="center" 
-      alignItems="center" 
+    <Grid
+      container
+      justifyContent="center"
+      alignItems="center"
       style={{ minHeight: '80vh', padding: '16px' }} // Full height with padding
     >
       <Grid item xs={12} sm={8} md={6} lg={4}>
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            padding: 3, 
-            boxShadow: 3, 
-            borderRadius: 2, 
-            backgroundColor: '#ffffff' // Optional background for contrast
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            padding: 3,
+            boxShadow: 3,
+            borderRadius: 2,
+            backgroundColor: '#ffffff', // Optional background for contrast
           }}
         >
           <Typography variant="h4" gutterBottom>Sign Up</Typography>
-          {error && <Typography color="error" variant="body2" sx={{ marginBottom: 2 }}>{error}</Typography>}
-          
+          {isSignupDisabled && (
+            <Typography color="error" variant="body1" sx={{ marginBottom: 2 }}>
+              Signups are temporarily disabled. Please try again later.
+            </Typography>
+          )}
+          {error && (
+            <Typography color="error" variant="body2" sx={{ marginBottom: 2 }}>
+              {error}
+            </Typography>
+          )}
+
           <form onSubmit={handleSignUp} style={{ width: '100%' }}>
             <TextField
               label="Email"
@@ -66,6 +83,7 @@ const SignUp = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={isSignupDisabled}
             />
             <TextField
               label="Password"
@@ -76,6 +94,7 @@ const SignUp = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={isSignupDisabled}
             />
             <TextField
               label="Confirm Password"
@@ -86,26 +105,27 @@ const SignUp = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              disabled={isSignupDisabled}
             />
-            <Button 
-            type="submit"
-            variant="contained"
-            fullWidth
-            sx={{
-            marginTop: 2,
-            backgroundColor: '#0b9299',
-            '&:hover': {
-            backgroundColor: '#08777d' // Optional hover effect for a darker shade
-              }
-            }}
-            disabled={loading}
-              >
-            {loading ? <CircularProgress size={24} /> : 'Sign Up'} 
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{
+                marginTop: 2,
+                backgroundColor: '#0b9299',
+                '&:hover': {
+                  backgroundColor: '#08777d', // Optional hover effect for a darker shade
+                },
+              }}
+              disabled={loading || isSignupDisabled}
+            >
+              {loading ? <CircularProgress size={24} /> : 'Sign Up'}
             </Button>
           </form>
           <Box sx={{ marginTop: 2 }}>
             <Typography variant="body2">
-              Already have an account? 
+              Already have an account?
               <Button onClick={() => navigate('/login')} variant="text" color="primary">
                 Sign In
               </Button>
