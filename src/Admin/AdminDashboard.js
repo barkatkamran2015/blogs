@@ -207,20 +207,28 @@ const handlePostSubmission = async (e) => {
     const validColors = /^#[0-9A-F]{6}$/i; // Hex color validation
     const validFontSizes = ['8px', '10px', '12px', '14px', '16px', '18px', '24px', '36px', '48px', '72px'];
     const validTextAligns = ['left', 'center', 'right'];
-  
+
     return {
       color: validColors.test(style.color) ? style.color : '#000000',
       fontSize: validFontSizes.includes(style.fontSize) ? style.fontSize : '24px',
       textAlign: validTextAligns.includes(style.textAlign) ? style.textAlign : 'center',
     };
   };
-  
+
+  // Validate and ensure proper title style
   const validatedStyle = validateTitleStyle({
     color: titleColor,
     fontSize: titleSize,
     textAlign: titlePosition,
   });
-  
+
+  // Ensure the title is provided
+  if (!title.trim()) {
+    setError('Title is required.');
+    return;
+  }
+
+  // Ensure the content is provided
   if (!content.trim()) {
     setError('Content is required.');
     return;
@@ -246,19 +254,19 @@ const handlePostSubmission = async (e) => {
       imageUrl: imageURL || '', // Use existing image URL or empty string
       page: selectedPage, // Current page (e.g., Blog, Products Review)
       backgroundColor: selectedBackgroundColor || '#ffffff', // Include selected background color
-      titleStyle: {
-        color: titleColor, // Title text color
-        fontSize: titleSize, // Title font size
-        textAlign: titlePosition, // Title alignment
-      },
-    };    
+      titleStyle: validatedStyle, // Ensure the validated title style is used
+      creator_uid: 'admin123', // Add a placeholder or dynamic user ID for `creator_uid`
+    };
 
     console.log('Request Payload:', requestBody); // Debugging request payload
 
     // 4. Send request to the server
-    const method = editMode ? 'PUT' : 'POST'; // Use PUT for editing, POST for creating
-    const response = await fetch(API_URL, {
-      method,
+    const endpoint = editMode
+      ? `${API_URL}?method=UPDATE_POST` // Query param for updates
+      : `${API_URL}?method=CREATE_POST`; // Query param for creation
+
+    const response = await fetch(endpoint, {
+      method: 'POST', // Always use POST, as the backend distinguishes by `method` query param
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody),
     });
@@ -279,14 +287,13 @@ const handlePostSubmission = async (e) => {
     fetchPosts(); // Refresh the posts list
     resetForm(); // Reset the form inputs
   } catch (err) {
-    console.error('Error saving post:', err.message); // Log error for debugging
+    console.error('Error saving post:', err); // Log error for debugging
     setError(`Failed to save post. Reason: ${err.message}`);
   } finally {
     setIsLoading(false); // Reset loading state
   }
 };
-
-   
+  
   // Handle delete post
   const handleDelete = async (postId) => {
     if (!window.confirm('Are you sure you want to delete this post?')) return;
