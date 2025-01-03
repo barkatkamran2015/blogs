@@ -101,60 +101,69 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
-          {menuItems.map((menu, index) =>
-            menu.dropdown ? (
-              <Box key={index}>
-                <Button
-                  sx={{
-                    color: 'white',
-                    fontWeight: 'bold',
-                    textTransform: 'none',
-                  }}
-                >
-                  {menu.label}
-                </Button>
-              </Box>
-            ) : (
+  {menuItems.map((menu, index) =>
+    menu.dropdown ? (
+      <Box key={index}>
+        {/* Desktop Dropdown Button */}
+        <Button
+          onClick={() => toggleMobileMenu(menu.label)} // Toggle dropdown visibility
+          sx={{
+            color: 'white',
+            fontWeight: 'bold',
+            textTransform: 'none',
+          }}
+        >
+          {menu.label}
+        </Button>
+        {mobileMenuOpen[menu.label] && (
+          <Box
+            sx={{
+              position: 'absolute',
+              backgroundColor: '#0b9299',
+              zIndex: 10,
+              mt: 2,
+            }}
+          >
+            {menu.dropdown.map((item, idx) => (
               <Button
-                key={index}
-                sx={{ color: 'white', fontWeight: 'bold' }}
+                key={idx}
                 component={Link}
-                to={menu.path}
-              >
-                {menu.label}
-              </Button>
-            )
-          )}
-          {!user ? (
-            <>
-              <Button
-                component={Link}
-                to="/login"
-                sx={{ color: 'white', fontWeight: 'bold' }}
-              >
-                Login
-              </Button>
-              <Button
-                component={Link}
-                to="/signup"
+                to={item.path}
+                onClick={() => {
+                  toggleMobileMenu(menu.label); // Close dropdown
+                }}
                 sx={{
-                  backgroundColor: '#FFD700',
-                  color: '#6A5ACD',
-                  fontWeight: 'bold',
+                  color: 'white',
+                  textTransform: 'none',
+                  width: '100%',
+                  display: 'block',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  },
                 }}
               >
-                Sign Up
+                {item.label}
               </Button>
-            </>
-          ) : (
-            <Button
-              onClick={handleLogout}
-              sx={{ color: 'white', fontWeight: 'bold' }}
-            >
-              Logout
-            </Button>
-          )}
-        </Box>
+            ))}
+          </Box>
+        )}
+      </Box>
+    ) : (
+      <Button
+        key={index}
+        component={Link}
+        to={menu.path} // Navigate for non-dropdown items
+        sx={{
+          color: 'white',
+          fontWeight: 'bold',
+          textTransform: 'none',
+        }}
+      >
+        {menu.label}
+      </Button>
+    )
+  )}
+</Box>
 
         {/* Mobile Menu */}
         <IconButton
