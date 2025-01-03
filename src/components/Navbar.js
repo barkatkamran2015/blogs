@@ -104,7 +104,6 @@ const Navbar = () => {
   {menuItems.map((menu, index) =>
     menu.dropdown ? (
       <Box key={index}>
-        {/* Desktop Dropdown Button */}
         <Button
           onClick={() => toggleMobileMenu(menu.label)} // Toggle dropdown visibility
           sx={{
@@ -115,44 +114,12 @@ const Navbar = () => {
         >
           {menu.label}
         </Button>
-        {mobileMenuOpen[menu.label] && (
-          <Box
-            sx={{
-              position: 'absolute',
-              backgroundColor: '#0b9299',
-              zIndex: 10,
-              mt: 2,
-            }}
-          >
-            {menu.dropdown.map((item, idx) => (
-              <Button
-                key={idx}
-                component={Link}
-                to={item.path}
-                onClick={() => {
-                  toggleMobileMenu(menu.label); // Close dropdown
-                }}
-                sx={{
-                  color: 'white',
-                  textTransform: 'none',
-                  width: '100%',
-                  display: 'block',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  },
-                }}
-              >
-                {item.label}
-              </Button>
-            ))}
-          </Box>
-        )}
       </Box>
     ) : (
       <Button
         key={index}
         component={Link}
-        to={menu.path} // Navigate for non-dropdown items
+        to={menu.path}
         sx={{
           color: 'white',
           fontWeight: 'bold',
@@ -162,6 +129,47 @@ const Navbar = () => {
         {menu.label}
       </Button>
     )
+  )}
+  {!user ? (
+    <>
+      <Button
+        component={Link}
+        to="/login"
+        sx={{
+          color: 'white',
+          fontWeight: 'bold',
+          textTransform: 'none',
+        }}
+      >
+        Sign In
+      </Button>
+      <Button
+        component={Link}
+        to="/signup"
+        sx={{
+          backgroundColor: '#FFD700',
+          color: '#6A5ACD',
+          fontWeight: 'bold',
+          textTransform: 'none',
+          '&:hover': {
+            backgroundColor: '#E5C300',
+          },
+        }}
+      >
+        Sign Up
+      </Button>
+    </>
+  ) : (
+    <Button
+      onClick={handleLogout}
+      sx={{
+        color: 'white',
+        fontWeight: 'bold',
+        textTransform: 'none',
+      }}
+    >
+      Logout
+    </Button>
   )}
 </Box>
 
