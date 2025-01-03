@@ -6,9 +6,9 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 // Static Images for Slider
-import imageBlog from '../assets/bedroom.jpeg';
-import imageNature from '../assets/parenting.jpeg';
-import imageRecipe from '../assets/kitchen.jpeg';
+import imageBlog from '../assets/blog.jpg';
+import imageNature from '../assets/nature.jpg';
+import imageRecipe from '../assets/recipe.jpg';
 
 const API_URL = 'https://barkatkamran.com/db.php';
 
@@ -20,7 +20,9 @@ const Home = () => {
 
   // Page paths for redirection
   const pagePaths = {
-    Recipe: '/recipe',
+    Recipe: '/food',
+    Drinks: '/drinks',
+    Dessert: '/dessert',
     Blog: '/blog',
     'Products Review': '/products-review',
   };
@@ -139,12 +141,6 @@ const Home = () => {
                     >
                       {post.title}
                     </h2>
-
-                    {/* Display Created Date */}
-                    <p className="home-page__post-meta">
-                      Published on {new Date(post.created_at).toLocaleDateString()}
-                    </p>
-
                     <div
                       className="home-page__post-excerpt"
                       dangerouslySetInnerHTML={{

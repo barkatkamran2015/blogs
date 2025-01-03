@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom'; // To handle query parameters
 import Header from './Header'; // Import Header component
-import '../Food.css'; // Import the scoped CSS for the Recipe page
+import '../Food.css'; // Import the scoped CSS for the Dessert page
 
 const API_URL = 'https://barkatkamran.com/db.php'; // Backend API endpoint
 
-const Recipe = () => {
+const Dessert = () => {
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -19,20 +19,20 @@ const Recipe = () => {
   const queryParams = new URLSearchParams(location.search);
   const postIdFromQuery = queryParams.get('id');
 
-  // Fetch Recipe posts on mount
+  // Fetch Dessert posts on mount
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_URL}?page=Recipe`);
+        const response = await fetch(`${API_URL}?page=Dessert`);
 
         if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
 
         const data = await response.json();
-        console.log('Fetched Recipe Posts:', data); // Debug fetched posts
+        console.log('Fetched Dessert Posts:', data); // Debug fetched posts
 
-        const recipePosts = data
-          .filter((post) => post.page === 'Recipe')
+        const dessertPosts = data
+          .filter((post) => post.page === 'Dessert')
           .map((post) => ({
             ...post,
             titleStyle: post.titleStyle
@@ -41,17 +41,17 @@ const Recipe = () => {
           }));
 
         // Set posts and filtered posts
-        setPosts(recipePosts);
-        setFilteredPosts(recipePosts);
+        setPosts(dessertPosts);
+        setFilteredPosts(dessertPosts);
 
         // Extract unique categories and tags
-        const uniqueCategories = [...new Set(recipePosts.map((post) => post.category))];
-        const uniqueTags = [...new Set(recipePosts.flatMap((post) => post.tags || []))];
+        const uniqueCategories = [...new Set(dessertPosts.map((post) => post.category))];
+        const uniqueTags = [...new Set(dessertPosts.flatMap((post) => post.tags || []))];
 
         setCategories(uniqueCategories);
         setTags(uniqueTags);
 
-        if (recipePosts.length === 0) setError('No posts found for the Recipe page.');
+        if (dessertPosts.length === 0) setError('No posts found for the Dessert page.');
 
         // Scroll to the specific post if `id` is provided in the query
         if (postIdFromQuery) {
@@ -167,4 +167,4 @@ const Recipe = () => {
   );
 };
 
-export default Recipe;
+export default Dessert;

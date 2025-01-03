@@ -14,6 +14,8 @@ import {
   Box,
   Divider,
   Button,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -22,11 +24,20 @@ import imageLogo from '../assets/logo1.png';
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [anchorEl, setAnchorEl] = useState({}); // Manage dropdown state for multiple menus
+  const [hoverTimeout, setHoverTimeout] = useState(null); // Handle hover delays
 
   const menuItems = [
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
-    { label: 'Recipe', path: '/recipe' },
+    {
+      label: 'Recipe',
+      dropdown: [
+        { label: 'Food', path: '/food' },
+        { label: 'Drinks', path: '/drinks' },
+        { label: 'Dessert', path: '/dessert' },
+      ],
+    },
     { label: 'Blog', path: '/blog' },
     { label: 'Products Review', path: '/products-review' },
     { label: 'A.I Style Advisor', path: '/style-advisor' },
@@ -46,6 +57,23 @@ const Navbar = () => {
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
+  };
+
+  const handleOpenMenu = (event, menuLabel) => {
+    setAnchorEl((prev) => ({ ...prev, [menuLabel]: event.currentTarget }));
+    if (hoverTimeout) clearTimeout(hoverTimeout);
+  };
+
+  const handleCloseMenu = (menuLabel) => {
+    const timeout = setTimeout(() => {
+      setAnchorEl((prev) => ({ ...prev, [menuLabel]: null }));
+    }, 200);
+    setHoverTimeout(timeout);
+  };
+
+  const cancelClose = (menuLabel) => {
+    if (hoverTimeout) clearTimeout(hoverTimeout);
+    setAnchorEl((prev) => ({ ...prev, [menuLabel]: anchorEl[menuLabel] }));
   };
 
   return (
@@ -71,21 +99,80 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
-          {menuItems.map((menu, index) => (
-            <Button
-              key={index}
-              sx={{
-                color: 'white',
-                fontWeight: 'bold',
-                textTransform: 'none',
-                '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
-              }}
+  {menuItems.map((menu, index) =>
+    menu.dropdown ? (
+      <Box
+        key={index}
+        onMouseEnter={(e) => handleOpenMenu(e, menu.label)}
+        onMouseLeave={() => handleCloseMenu(menu.label)}
+      >
+        {/* Wrap the Recipe Button with a Link */}
+        <Button
+          component={Link}
+          to={menu.path || '/food'}
+          aria-controls={`menu-${menu.label}`}
+          aria-haspopup="true"
+          sx={{
+            color: 'white',
+            fontWeight: 'bold',
+            textTransform: 'none',
+            backgroundColor: '#0b9299',
+            '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+          }}
+        >
+          {menu.label}
+        </Button>
+        <Menu
+          id={`menu-${menu.label}`}
+          anchorEl={anchorEl[menu.label]}
+          open={Boolean(anchorEl[menu.label])}
+          onClose={() => handleCloseMenu(menu.label)}
+          MenuListProps={{
+            onMouseEnter: () => cancelClose(menu.label),
+            onMouseLeave: () => handleCloseMenu(menu.label),
+          }}
+          sx={{
+            mt: 1,
+            '& .MuiPaper-root': {
+              backgroundColor: '#0b9299',
+              color: 'white',
+            },
+            '& .MuiMenuItem-root': {
+              '&:hover': {
+                backgroundColor: '#0b9299',
+              },
+            },
+          }}
+        >
+          {menu.dropdown.map((item, idx) => (
+            <MenuItem
+              key={idx}
               component={Link}
-              to={menu.path}
+              to={item.path}
+              onClick={() => handleCloseMenu(menu.label)}
             >
-              {menu.label}
-            </Button>
+              {item.label}
+            </MenuItem>
           ))}
+        </Menu>
+      </Box>
+    ) : (
+      <Button
+        key={index}
+        sx={{
+          color: 'white',
+          fontWeight: 'bold',
+          textTransform: 'none',
+          backgroundColor: '#0b9299',
+          '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+        }}
+        component={Link}
+        to={menu.path}
+      >
+        {menu.label}
+      </Button>
+            )
+          )}
           {!user ? (
             <>
               <Button
@@ -171,7 +258,6 @@ const Navbar = () => {
               paddingBottom: '16px',
             }}
           >
-            {/* Logo aligned to the left */}
             <Box sx={{ flexGrow: 1 }}>
               <img
                 src={imageLogo}
@@ -184,107 +270,73 @@ const Navbar = () => {
             </IconButton>
           </Box>
 
-          {/* Sign Up and Login Buttons */}
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
-            {!user ? (
-              <>
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: '#FFD700',
-                    color: '#6A5ACD',
-                    textTransform: 'none',
-                    fontWeight: 'bold',
-                    maxWidth: '300px',
-                    width: '100%',
-                    margin: '0 auto',
-                    '&:hover': {
-                      backgroundColor: '#E5C300',
-                    },
-                  }}
-                  component={Link}
-                  to="/signup"
-                  onClick={toggleDrawer(false)}
-                >
-                  Sign Up
-                </Button>
-                <Button
-                  variant="outlined"
-                  sx={{
-                    color: '#FFD700',
-                    borderColor: '#FFD700',
-                    textTransform: 'none',
-                    fontWeight: 'bold',
-                    maxWidth: '300px',
-                    width: '100%',
-                    margin: '0 auto',
-                    '&:hover': {
-                      backgroundColor: '#E5C300',
-                      borderColor: '#E5C300',
-                    },
-                  }}
-                  component={Link}
-                  to="/login"
-                  onClick={toggleDrawer(false)}
-                >
-                  Log In
-                </Button>
-              </>
-            ) : (
-              <Button
-                variant="outlined"
-                sx={{
-                  color: '#FFD700',
-                  borderColor: '#FFD700',
-                  textTransform: 'none',
-                  fontWeight: 'bold',
-                  maxWidth: '300px',
-                  width: '100%',
-                  margin: '0 auto',
-                  '&:hover': {
-                    backgroundColor: '#E5C300',
-                    borderColor: '#E5C300',
-                  },
-                }}
-                onClick={() => {
-                  handleLogout();
-                  toggleDrawer(false);
-                }}
-              >
-                Logout
-              </Button>
-            )}
-          </Box>
-
           <Divider sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.2)' }} />
 
           {/* Menu Items */}
           <List>
-            {menuItems.map((menu, index) => (
-              <ListItem
-                button
-                key={index}
-                component={Link}
-                to={menu.path}
-                onClick={toggleDrawer(false)}
-                sx={{
-                  textDecoration: 'none',
-                  color: 'white',
-                  padding: '12px 32px',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  },
-                }}
-              >
-                <ListItemText
-                  primary={menu.label}
-                  primaryTypographyProps={{
-                    fontSize: '16px',
-                    fontWeight: 'bold',
+            {menuItems.map((menu, index) =>
+              menu.dropdown ? (
+                <Box key={index} sx={{ pl: 3 }}>
+                  <Typography
+                    sx={{
+                      color: 'white',
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      mb: 1,
+                    }}
+                  >
+                    {menu.label}
+                  </Typography>
+                  {menu.dropdown.map((item, idx) => (
+                    <ListItem
+                      button
+                      key={idx}
+                      component={Link}
+                      to={item.path}
+                      onClick={toggleDrawer(false)}
+                      sx={{
+                        pl: 4,
+                        color: 'white',
+                        textDecoration: 'none',
+                        '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+                      }}
+                    >
+                      <ListItemText
+                        primary={item.label}
+                        primaryTypographyProps={{
+                          fontSize: '14px',
+                          fontWeight: 'normal',
+                        }}
+                      />
+                    </ListItem>
+                  ))}
+                </Box>
+              ) : (
+                <ListItem
+                  button
+                  key={index}
+                  component={Link}
+                  to={menu.path}
+                  onClick={toggleDrawer(false)}
+                  sx={{
+                    textDecoration: 'none',
+                    color: 'white',
+                    padding: '12px 32px',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    },
                   }}
-                />
-              </ListItem>
-            ))}
+                >
+                  <ListItemText
+                    primary={menu.label}
+                    primaryTypographyProps={{
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                    }}
+                  />
+                </ListItem>
+              )
+            )}
           </List>
         </Drawer>
       </Toolbar>
