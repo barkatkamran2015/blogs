@@ -103,9 +103,13 @@ const Navbar = () => {
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
   {menuItems.map((menu, index) =>
     menu.dropdown ? (
-      <Box key={index}>
+      <Box key={index} sx={{ position: 'relative' }}>
+        {/* Dropdown Toggle */}
         <Button
-          onClick={() => toggleMobileMenu(menu.label)} // Toggle dropdown visibility
+          onClick={(e) => {
+            e.preventDefault(); // Prevent navigation
+            toggleMobileMenu(menu.label); // Toggle the dropdown menu
+          }}
           sx={{
             color: 'white',
             fontWeight: 'bold',
@@ -114,6 +118,45 @@ const Navbar = () => {
         >
           {menu.label}
         </Button>
+
+        {/* Dropdown Menu */}
+        {mobileMenuOpen[menu.label] && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              backgroundColor: '#0b9299',
+              zIndex: 1,
+              borderRadius: '4px',
+              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+            }}
+          >
+            {menu.dropdown.map((item, idx) => (
+              <Button
+                key={idx}
+                component={Link}
+                to={item.path}
+                onClick={() => {
+                  // Navigate and close the dropdown
+                  setMobileMenuOpen({}); // Close dropdown
+                }}
+                sx={{
+                  display: 'block',
+                  color: 'white',
+                  padding: '8px 16px',
+                  textAlign: 'left',
+                  textTransform: 'none',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  },
+                }}
+              >
+                {item.label}
+              </Button>
+            ))}
+          </Box>
+        )}
       </Box>
     ) : (
       <Button
