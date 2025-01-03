@@ -24,8 +24,15 @@ import imageLogo from '../assets/logo1.png';
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const [anchorEl, setAnchorEl] = useState({}); // Manage dropdown state for multiple menus
-  const [hoverTimeout, setHoverTimeout] = useState(null); // Handle hover delays
+  const [anchorEl, setAnchorEl] = useState({});
+  const [mobileMenuOpen, setMobileMenuOpen] = useState({}); // Added for managing mobile menu dropdowns
+
+  const toggleMobileMenu = (menuLabel) => { // Function to toggle mobile menu dropdown
+    setMobileMenuOpen(prev => ({
+      ...prev,
+      [menuLabel]: !prev[menuLabel]
+    }));
+  };
 
   const menuItems = [
     { label: 'Home', path: '/' },
@@ -60,22 +67,15 @@ const Navbar = () => {
   };
 
   const handleOpenMenu = (event, menuLabel) => {
-    setAnchorEl((prev) => ({ ...prev, [menuLabel]: event.currentTarget }));
-    if (hoverTimeout) clearTimeout(hoverTimeout);
+    setAnchorEl((prev) => ({
+      ...prev,
+      [menuLabel]: prev[menuLabel] ? null : event.currentTarget
+    }));
   };
 
   const handleCloseMenu = (menuLabel) => {
-    const timeout = setTimeout(() => {
-      setAnchorEl((prev) => ({ ...prev, [menuLabel]: null }));
-    }, 200);
-    setHoverTimeout(timeout);
+    setAnchorEl((prev) => ({ ...prev, [menuLabel]: null }));
   };
-
-  const cancelClose = (menuLabel) => {
-    if (hoverTimeout) clearTimeout(hoverTimeout);
-    setAnchorEl((prev) => ({ ...prev, [menuLabel]: anchorEl[menuLabel] }));
-  };
-
   return (
     <AppBar position="sticky" sx={{ backgroundColor: '#0b9299' }}>
       <Toolbar>
@@ -99,78 +99,73 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
-  {menuItems.map((menu, index) =>
-    menu.dropdown ? (
-      <Box
-        key={index}
-        onMouseEnter={(e) => handleOpenMenu(e, menu.label)}
-        onMouseLeave={() => handleCloseMenu(menu.label)}
-      >
-        {/* Wrap the Recipe Button with a Link */}
-        <Button
-          component={Link}
-          to={menu.path || '/food'}
-          aria-controls={`menu-${menu.label}`}
-          aria-haspopup="true"
-          sx={{
-            color: 'white',
-            fontWeight: 'bold',
-            textTransform: 'none',
-            backgroundColor: '#0b9299',
-            '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
-          }}
-        >
-          {menu.label}
-        </Button>
-        <Menu
-          id={`menu-${menu.label}`}
-          anchorEl={anchorEl[menu.label]}
-          open={Boolean(anchorEl[menu.label])}
-          onClose={() => handleCloseMenu(menu.label)}
-          MenuListProps={{
-            onMouseEnter: () => cancelClose(menu.label),
-            onMouseLeave: () => handleCloseMenu(menu.label),
-          }}
-          sx={{
-            mt: 1,
-            '& .MuiPaper-root': {
-              backgroundColor: '#0b9299',
-              color: 'white',
-            },
-            '& .MuiMenuItem-root': {
-              '&:hover': {
-                backgroundColor: '#0b9299',
-              },
-            },
-          }}
-        >
-          {menu.dropdown.map((item, idx) => (
-            <MenuItem
-              key={idx}
-              component={Link}
-              to={item.path}
-              onClick={() => handleCloseMenu(menu.label)}
-            >
-              {item.label}
-            </MenuItem>
-          ))}
-        </Menu>
-      </Box>
-    ) : (
-      <Button
-        key={index}
-        sx={{
-          color: 'white',
-          fontWeight: 'bold',
-          textTransform: 'none',
-          backgroundColor: '#0b9299',
-          '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
-        }}
-        component={Link}
-        to={menu.path}
-      >
-        {menu.label}
-      </Button>
+          {menuItems.map((menu, index) =>
+            menu.dropdown ? (
+              <Box
+                key={index}
+                onClick={(e) => handleOpenMenu(e, menu.label)}
+              >
+                {/* Wrap the Recipe Button with a Link */}
+                <Button
+                  component={Link}
+                  to={menu.path || '/food'}
+                  aria-controls={`menu-${menu.label}`}
+                  aria-haspopup="true"
+                  sx={{
+                    color: 'white',
+                    fontWeight: 'bold',
+                    textTransform: 'none',
+                    backgroundColor: '#0b9299',
+                    '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+                  }}
+                >
+                  {menu.label}
+                </Button>
+                <Menu
+                  id={`menu-${menu.label}`}
+                  anchorEl={anchorEl[menu.label]}
+                  open={Boolean(anchorEl[menu.label])}
+                  onClose={() => handleCloseMenu(menu.label)}
+                  sx={{
+                    mt: 1,
+                    '& .MuiPaper-root': {
+                      backgroundColor: '#0b9299',
+                      color: 'white',
+                    },
+                    '& .MuiMenuItem-root': {
+                      '&:hover': {
+                        backgroundColor: '#0b9299',
+                      },
+                    },
+                  }}
+                >
+                  {menu.dropdown.map((item, idx) => (
+                    <MenuItem
+                      key={idx}
+                      component={Link}
+                      to={item.path}
+                      onClick={() => handleCloseMenu(menu.label)}
+                    >
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            ) : (
+              <Button
+                key={index}
+                sx={{
+                  color: 'white',
+                  fontWeight: 'bold',
+                  textTransform: 'none',
+                  backgroundColor: '#0b9299',
+                  '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+                }}
+                component={Link}
+                to={menu.path}
+              >
+                {menu.label}
+              </Button>
             )
           )}
           {!user ? (
@@ -274,70 +269,79 @@ const Navbar = () => {
 
           {/* Menu Items */}
           <List>
-            {menuItems.map((menu, index) =>
-              menu.dropdown ? (
-                <Box key={index} sx={{ pl: 3 }}>
-                  <Typography
+        {menuItems.map((menu, index) =>
+          menu.dropdown ? (
+            <Box key={index} sx={{ pl: 3 }}>
+              <ListItem
+                button
+                onClick={() => toggleMobileMenu(menu.label)}
+                sx={{
+                  color: 'white',
+                  textDecoration: 'none',
+                  '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+                }}
+              >
+                <ListItemText
+                  primary={menu.label}
+                  primaryTypographyProps={{
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                  }}
+                />
+              </ListItem>
+              {mobileMenuOpen[menu.label] && (
+                menu.dropdown.map((item, idx) => (
+                  <ListItem
+                    button
+                    key={idx}
+                    component={Link}
+                    to={item.path}
+                    onClick={toggleDrawer(false)}
                     sx={{
+                      pl: 4,
                       color: 'white',
-                      fontSize: '16px',
-                      fontWeight: 'bold',
-                      mb: 1,
+                      textDecoration: 'none',
+                      '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
                     }}
                   >
-                    {menu.label}
-                  </Typography>
-                  {menu.dropdown.map((item, idx) => (
-                    <ListItem
-                      button
-                      key={idx}
-                      component={Link}
-                      to={item.path}
-                      onClick={toggleDrawer(false)}
-                      sx={{
-                        pl: 4,
-                        color: 'white',
-                        textDecoration: 'none',
-                        '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+                    <ListItemText
+                      primary={item.label}
+                      primaryTypographyProps={{
+                        fontSize: '14px',
+                        fontWeight: 'normal',
                       }}
-                    >
-                      <ListItemText
-                        primary={item.label}
-                        primaryTypographyProps={{
-                          fontSize: '14px',
-                          fontWeight: 'normal',
-                        }}
-                      />
-                    </ListItem>
-                  ))}
-                </Box>
-              ) : (
-                <ListItem
-                  button
-                  key={index}
-                  component={Link}
-                  to={menu.path}
-                  onClick={toggleDrawer(false)}
-                  sx={{
-                    textDecoration: 'none',
-                    color: 'white',
-                    padding: '12px 32px',
-                    '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                    },
-                  }}
-                >
-                  <ListItemText
-                    primary={menu.label}
-                    primaryTypographyProps={{
-                      fontSize: '16px',
-                      fontWeight: 'bold',
-                    }}
-                  />
-                </ListItem>
-              )
-            )}
-          </List>
+                    />
+                  </ListItem>
+                ))
+              )}
+            </Box>
+          ) : (
+            <ListItem
+              button
+              key={index}
+              component={Link}
+              to={menu.path}
+              onClick={toggleDrawer(false)}
+              sx={{
+                textDecoration: 'none',
+                color: 'white',
+                padding: '12px 32px',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                },
+              }}
+            >
+              <ListItemText
+                primary={menu.label}
+                primaryTypographyProps={{
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                }}
+              />
+            </ListItem>
+          )
+        )}
+      </List>
         </Drawer>
       </Toolbar>
     </AppBar>
