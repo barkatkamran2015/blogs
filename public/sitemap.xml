@@ -25,17 +25,17 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.thestylishmama.com/recipe/food</loc>
+    <loc>https://www.thestylishmama.com/food</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.thestylishmama.com/recipe/drinks</loc>
+    <loc>https://www.thestylishmama.com/drinks</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.thestylishmama.com/recipe/dessert</loc>
+    <loc>https://www.thestylishmama.com/dessert</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
