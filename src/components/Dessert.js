@@ -107,13 +107,13 @@ const Dessert = () => {
         <>
           {/* Header with Search and Filters */}
           <div className="dessert-page__search-container">
-            <Header
-              onSearch={handleSearch}
-              onFilterApply={handleFilterApply}
-              categories={categories}
-              tags={tags}
-            />
-          </div>
+  <Header
+    onSearch={handleSearch}
+    onFilterApply={handleFilterApply}
+    categories={categories}
+    tags={tags}
+  />
+</div>
 
           {/* Content Section */}
           <div className="dessert-page__content-wrapper">
