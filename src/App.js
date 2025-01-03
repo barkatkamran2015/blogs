@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./Footer"; // Import the Footer component
 import Home from "./components/Home";
@@ -11,7 +17,9 @@ import AdminDashboard from "./Admin/AdminDashboard";
 import AdminPanel from "./Admin/AdminPanel";
 import PostEditor from "./Admin/PostEditor";
 import Blog from "./components/Blog";
-import Recipe from "./components/Recipe";
+import Food from "./components/Recipe"; // Recipe component is now named "Food"
+import Drinks from "./components/Drinks"; // Import Drinks component
+import Dessert from "./components/Dessert"; // Import Dessert component
 import ProductsReview from "./components/ProductsReview";
 import StyleAdvisor from "./components/StyleAdvisor"; // Import StyleAdvisor component
 import { auth } from "./Admin/firebaseConfig";
@@ -56,17 +64,22 @@ const FooterWrapper = () => {
 const App = () => {
   return (
     <Router>
-      <div id="app-layout" style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <div
+        id="app-layout"
+        style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      >
         {/* Navbar remains persistent across routes */}
         <Navbar />
-        
+
         <div style={{ flex: 1 }}>
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/blog" element={<Blog />} />
-            <Route path="/recipe" element={<Recipe />} />
+            <Route path="/food" element={<Food />} />
+            <Route path="/drinks" element={<Drinks />} /> {/* Drinks Route */}
+            <Route path="/dessert" element={<Dessert />} /> {/* Dessert Route */}
             <Route path="/products-review" element={<ProductsReview />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/style-advisor" element={<StyleAdvisor />} /> {/* New Route */}
