@@ -1,0 +1,225 @@
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  box-sizing: border-box;
+  overflow-x: hidden; /* Prevent horizontal overflow */
+}
+
+/* Recipe Page Wrapper */
+.recipe-page {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Search Bar Container */
+.recipe-page__search-container {
+  display: flex;
+  justify-content: center; /* Center search bar */
+  margin: 80px 10px 1px 300px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.recipe-page__search-input {
+  width: 100%;
+  max-width: 500px; /* Limit width for larger screens */
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: border 0.3s ease;
+}
+
+.recipe-page__search-input:focus {
+  border-color: #007bff;
+}
+
+/* Content Wrapper */
+.recipe-page__content-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Grid Layout for Cards */
+.recipe-page__grid {
+  display: grid;
+  gap: 20px;
+  justify-content: center;
+  align-items: start;
+  width: 100%;
+  max-width: 100%; /* Prevent grid overflow */
+  box-sizing: border-box;
+}
+
+/* Recipe Card */
+.recipe-page__card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  max-width: 100%; /* Prevent card overflow */
+}
+
+.recipe-page__card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Title */
+.recipe-page__title {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* Content */
+.recipe-page__content {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+/* Image */
+.recipe-page__image {
+  width: 100%; /* Ensure images do not overflow */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 8px;
+  margin-top: 10px;
+  display: block; /* Fix inline-block issues */
+}
+
+/* Loading and Error Messages */
+.recipe-page__loading-message,
+.recipe-page__error-message,
+.recipe-page__no-posts-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+  margin: 20px 0;
+}
+
+.recipe-page__error-message {
+  color: red;
+}
+
+/* Heart Loader Styling */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  background-color: #fff; /* Optional: White background for loader */
+}
+
+.heart-loader {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  transform: rotate(-45deg);
+  animation: beat 1s infinite;
+}
+
+.heart-loader::before,
+.heart-loader::after {
+  content: '';
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: red;
+  border-radius: 50%;
+}
+
+.heart-loader::before {
+  top: -25px;
+  left: 0;
+}
+
+.heart-loader::after {
+  left: 25px;
+  top: 0;
+}
+
+@keyframes beat {
+  0%, 100% {
+    transform: scale(1) rotate(-45deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(-45deg);
+  }
+}
+
+/* Responsive Design */
+/* Medium Devices (Tablets) */
+@media screen and (max-width: 768px) {
+  .recipe-page__search-container {
+    margin: 10px auto; /* Adjust spacing for tablets */
+    justify-content: center; /* Center search bar */
+  }
+
+  .recipe-page__title {
+    font-size: 1.3rem;
+  }
+
+  .recipe-page__content {
+    font-size: 0.95rem;
+  }
+
+  .recipe-page__grid {
+    grid-template-columns: 1fr; /* Single column layout */
+    gap: 15px;
+  }
+
+  .recipe-page__card {
+    padding: 15px; /* Reduce padding for smaller devices */
+  }
+}
+
+/* Small Devices (Phones) */
+@media screen and (max-width: 480px) {
+  .recipe-page {
+    padding: 10px;
+    margin: 0; /* Remove unnecessary margins */
+  }
+
+  .recipe-page__search-container {
+    margin: 5px 25px 15px 50px; /* Adjust spacing for smaller screens */
+    justify-content: center;
+    width: 100%;
+  }
+
+  .recipe-page__search-input {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .recipe-page__grid {
+    gap: 10px; /* Reduce spacing between cards */
+  }
+
+  .recipe-page__title {
+    font-size: 1.2rem;
+  }
+
+  .recipe-page__content {
+    font-size: 0.9rem;
+  }
+
+  .recipe-page__image {
+    height: auto /* Smaller image height for phones */
+  }
+
+  .recipe-page__card {
+    margin-top: 30px;
+  }
+}
