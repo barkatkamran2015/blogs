@@ -14,8 +14,6 @@ import {
   Box,
   Divider,
   Button,
-  Menu,
-  MenuItem,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -24,14 +22,43 @@ import imageLogo from '../assets/logo1.png';
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const [anchorEl, setAnchorEl] = useState({});
-  const [mobileMenuOpen, setMobileMenuOpen] = useState({}); // Added for managing mobile menu dropdowns
+  const [mobileMenuOpen, setMobileMenuOpen] = useState({});
 
-  const toggleMobileMenu = (menuLabel) => { // Function to toggle mobile menu dropdown
-    setMobileMenuOpen(prev => ({
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(setUser);
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768 && drawerOpen) {
+        setDrawerOpen(false); // Close drawer on larger screens
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [drawerOpen]);
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => console.log('User signed out'))
+      .catch((error) => console.error('Error signing out: ', error));
+  };
+
+  const toggleDrawer = (open) => () => {
+    setDrawerOpen(open);
+  };
+
+  const toggleMobileMenu = (menuLabel) => {
+    setMobileMenuOpen((prev) => ({
       ...prev,
-      [menuLabel]: !prev[menuLabel]
+      [menuLabel]: !prev[menuLabel],
     }));
+  };
+
+  const closeNavbarAndNavigate = () => {
+    setDrawerOpen(false);
+    setMobileMenuOpen({}); // Reset dropdown state
   };
 
   const menuItems = [
@@ -51,31 +78,6 @@ const Navbar = () => {
     { label: 'Contact', path: '/contact' },
   ];
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(setUser);
-    return () => unsubscribe();
-  }, []);
-
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => console.log('User signed out'))
-      .catch((error) => console.error('Error signing out: ', error));
-  };
-
-  const toggleDrawer = (open) => () => {
-    setDrawerOpen(open);
-  };
-
-  const handleOpenMenu = (event, menuLabel) => {
-    setAnchorEl((prev) => ({
-      ...prev,
-      [menuLabel]: prev[menuLabel] ? null : event.currentTarget
-    }));
-  };
-
-  const handleCloseMenu = (menuLabel) => {
-    setAnchorEl((prev) => ({ ...prev, [menuLabel]: null }));
-  };
   return (
     <AppBar position="sticky" sx={{ backgroundColor: '#0b9299' }}>
       <Toolbar>
@@ -87,7 +89,7 @@ const Navbar = () => {
           <Link to="/" style={{ textDecoration: 'none' }}>
             <img
               src={imageLogo}
-              alt="Classy Mama Logo"
+              alt="Logo"
               style={{
                 height: '55px',
                 objectFit: 'contain',
@@ -101,66 +103,21 @@ const Navbar = () => {
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
           {menuItems.map((menu, index) =>
             menu.dropdown ? (
-              <Box
-                key={index}
-                onClick={(e) => handleOpenMenu(e, menu.label)}
-              >
-                {/* Wrap the Recipe Button with a Link */}
+              <Box key={index}>
                 <Button
-                  component={Link}
-                  to={menu.path || '/food'}
-                  aria-controls={`menu-${menu.label}`}
-                  aria-haspopup="true"
                   sx={{
                     color: 'white',
                     fontWeight: 'bold',
                     textTransform: 'none',
-                    backgroundColor: '#0b9299',
-                    '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
                   }}
                 >
                   {menu.label}
                 </Button>
-                <Menu
-                  id={`menu-${menu.label}`}
-                  anchorEl={anchorEl[menu.label]}
-                  open={Boolean(anchorEl[menu.label])}
-                  onClose={() => handleCloseMenu(menu.label)}
-                  sx={{
-                    mt: 1,
-                    '& .MuiPaper-root': {
-                      backgroundColor: '#0b9299',
-                      color: 'white',
-                    },
-                    '& .MuiMenuItem-root': {
-                      '&:hover': {
-                        backgroundColor: '#0b9299',
-                      },
-                    },
-                  }}
-                >
-                  {menu.dropdown.map((item, idx) => (
-                    <MenuItem
-                      key={idx}
-                      component={Link}
-                      to={item.path}
-                      onClick={() => handleCloseMenu(menu.label)}
-                    >
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </Menu>
               </Box>
             ) : (
               <Button
                 key={index}
-                sx={{
-                  color: 'white',
-                  fontWeight: 'bold',
-                  textTransform: 'none',
-                  backgroundColor: '#0b9299',
-                  '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
-                }}
+                sx={{ color: 'white', fontWeight: 'bold' }}
                 component={Link}
                 to={menu.path}
               >
@@ -171,50 +128,38 @@ const Navbar = () => {
           {!user ? (
             <>
               <Button
-                sx={{
-                  color: 'white',
-                  fontWeight: 'bold',
-                  textTransform: 'none',
-                  '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
-                }}
                 component={Link}
                 to="/login"
+                sx={{ color: 'white', fontWeight: 'bold' }}
               >
                 Login
               </Button>
               <Button
+                component={Link}
+                to="/signup"
                 sx={{
                   backgroundColor: '#FFD700',
                   color: '#6A5ACD',
                   fontWeight: 'bold',
-                  textTransform: 'none',
-                  '&:hover': { backgroundColor: '#E5C300' },
                 }}
-                component={Link}
-                to="/signup"
               >
                 Sign Up
               </Button>
             </>
           ) : (
             <Button
-              sx={{
-                color: 'white',
-                fontWeight: 'bold',
-                textTransform: 'none',
-                '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
-              }}
               onClick={handleLogout}
+              sx={{ color: 'white', fontWeight: 'bold' }}
             >
               Logout
             </Button>
           )}
         </Box>
 
-        {/* Hamburger Menu (Mobile) */}
+        {/* Mobile Menu */}
         <IconButton
           edge="end"
-          color="inherit"
+          onClick={toggleDrawer(true)}
           sx={{
             display: { xs: 'block', md: 'none' },
             border: '2px solid white',
@@ -222,13 +167,15 @@ const Navbar = () => {
             padding: '8px',
             width: '50px',
             height: '50px',
+            backgroundColor: '#0b9299',
+            '&:hover': {
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+            },
           }}
-          onClick={toggleDrawer(true)}
         >
-          <MenuIcon sx={{ fontSize: '24px' }} />
+          <MenuIcon sx={{ fontSize: '24px', color: 'white' }} />
         </IconButton>
 
-        {/* Mobile Drawer */}
         <Drawer
           anchor="right"
           open={drawerOpen}
@@ -236,112 +183,187 @@ const Navbar = () => {
           sx={{
             '& .MuiDrawer-paper': {
               width: '100vw',
-              height: '100vh',
-              background: 'linear-gradient(180deg, #0b9299, #005f63)',
-              color: 'white',
+              height: 'calc(100vh - 64px)',
+              marginTop: '64px',
+              backgroundColor: '#0b9299',
               padding: '16px',
+              boxSizing: 'border-box',
             },
           }}
         >
-          {/* Drawer Header */}
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'space-between',
+              flexDirection: 'column',
               alignItems: 'center',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
               paddingBottom: '16px',
             }}
           >
-            <Box sx={{ flexGrow: 1 }}>
-              <img
-                src={imageLogo}
-                alt="Classy Mama Logo"
-                style={{ height: '40px', objectFit: 'contain', marginLeft: '15px' }}
-              />
-            </Box>
-            <IconButton onClick={toggleDrawer(false)} sx={{ color: 'white' }}>
+            <Typography
+              variant="h6"
+              sx={{
+                color: 'white',
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
+                textAlign: 'center',
+              }}
+            >
+              Menu
+            </Typography>
+            <IconButton
+              onClick={toggleDrawer(false)}
+              sx={{
+                position: 'absolute',
+                top: '8px',
+                right: '16px',
+                color: 'white',
+              }}
+            >
               <CloseIcon />
             </IconButton>
           </Box>
-
-          <Divider sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.2)' }} />
-
-          {/* Menu Items */}
+          <Divider sx={{ my: 2, backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
           <List>
-        {menuItems.map((menu, index) =>
-          menu.dropdown ? (
-            <Box key={index} sx={{ pl: 3 }}>
-              <ListItem
-                button
-                onClick={() => toggleMobileMenu(menu.label)}
-                sx={{
-                  color: 'white',
-                  textDecoration: 'none',
-                  '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
-                }}
-              >
-                <ListItemText
-                  primary={menu.label}
-                  primaryTypographyProps={{
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                  }}
-                />
-              </ListItem>
-              {mobileMenuOpen[menu.label] && (
-                menu.dropdown.map((item, idx) => (
+            {menuItems.map((menu, index) =>
+              menu.dropdown ? (
+                <Box key={index}>
                   <ListItem
                     button
-                    key={idx}
-                    component={Link}
-                    to={item.path}
-                    onClick={toggleDrawer(false)}
-                    sx={{
-                      pl: 4,
-                      color: 'white',
-                      textDecoration: 'none',
-                      '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
-                    }}
+                    onClick={() => toggleMobileMenu(menu.label)}
+                    sx={{ textDecoration: 'none', color: 'white' }}
                   >
                     <ListItemText
-                      primary={item.label}
+                      primary={menu.label}
                       primaryTypographyProps={{
-                        fontSize: '14px',
-                        fontWeight: 'normal',
+                        fontSize: '16px',
+                        fontWeight: 'bold',
+                        color: 'white',
                       }}
                     />
                   </ListItem>
-                ))
-              )}
-            </Box>
-          ) : (
-            <ListItem
-              button
-              key={index}
-              component={Link}
-              to={menu.path}
-              onClick={toggleDrawer(false)}
-              sx={{
-                textDecoration: 'none',
-                color: 'white',
-                padding: '12px 32px',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                },
-              }}
-            >
-              <ListItemText
-                primary={menu.label}
-                primaryTypographyProps={{
-                  fontSize: '16px',
-                  fontWeight: 'bold',
+                  {mobileMenuOpen[menu.label] &&
+                    menu.dropdown.map((item, idx) => (
+                      <ListItem
+                        key={idx}
+                        button
+                        component={Link}
+                        to={item.path}
+                        onClick={closeNavbarAndNavigate}
+                        sx={{
+                          pl: 4,
+                          textDecoration: 'none',
+                          color: 'white',
+                        }}
+                      >
+                        <ListItemText
+                          primary={item.label}
+                          primaryTypographyProps={{
+                            fontSize: '14px',
+                          }}
+                        />
+                      </ListItem>
+                    ))}
+                </Box>
+              ) : (
+                <ListItem
+                  button
+                  key={index}
+                  component={Link}
+                  to={menu.path}
+                  onClick={closeNavbarAndNavigate}
+                  sx={{
+                    textDecoration: 'none',
+                    color: 'white',
+                  }}
+                >
+                  <ListItemText
+                    primary={menu.label}
+                    primaryTypographyProps={{
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      color: 'white',
+                    }}
+                  />
+                </ListItem>
+              )
+            )}
+          </List>
+
+          <Divider sx={{ my: 4, backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
+
+          {/* Sign In/Sign Up Buttons */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2,
+            }}
+          >
+            {!user ? (
+              <>
+                <Button
+                  component={Link}
+                  to="/login"
+                  onClick={closeNavbarAndNavigate}
+                  sx={{
+                    color: 'white',
+                    border: '1px solid white',
+                    borderRadius: '5px',
+                    padding: '8px 16px',
+                    fontWeight: 'bold',
+                    textTransform: 'none',
+                    width: '80%',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    },
+                  }}
+                >
+                  Sign In
+                </Button>
+                <Button
+                  component={Link}
+                  to="/signup"
+                  onClick={closeNavbarAndNavigate}
+                  sx={{
+                    backgroundColor: '#FFD700',
+                    color: '#6A5ACD',
+                    fontWeight: 'bold',
+                    textTransform: 'none',
+                    padding: '8px 16px',
+                    borderRadius: '5px',
+                    width: '80%',
+                    '&:hover': {
+                      backgroundColor: '#E5C300',
+                    },
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </>
+            ) : (
+              <Button
+                onClick={() => {
+                  handleLogout();
+                  closeNavbarAndNavigate();
                 }}
-              />
-            </ListItem>
-          )
-        )}
-      </List>
+                sx={{
+                  color: 'white',
+                  border: '1px solid white',
+                  borderRadius: '5px',
+                  padding: '8px 16px',
+                  fontWeight: 'bold',
+                  textTransform: 'none',
+                  width: '80%',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  },
+                }}
+              >
+                Logout
+              </Button>
+            )}
+          </Box>
         </Drawer>
       </Toolbar>
     </AppBar>
