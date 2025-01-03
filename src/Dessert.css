@@ -1,0 +1,152 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Prevent horizontal overflow */
+  }
+  
+  /* Dessert Page Wrapper */
+  .dessert-page {
+    max-width: 100%; /* Allow full width */
+    margin: 0 auto;
+    padding: 20px; /* Add more padding */
+    box-sizing: border-box;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+  }
+  
+  /* Content Wrapper */
+  .dessert-page__content-wrapper {
+    max-width: 1250px; /* Increase maximum width */
+    margin: 0 auto;
+    padding: 20px; /* Add more padding */
+    box-sizing: border-box;
+  }
+  
+  /* Grid Layout for Cards */
+  .dessert-page__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Make responsive for smaller screens */
+    gap: 20px; /* Add spacing between cards */
+    width: 100%; /* Ensure full width */
+    box-sizing: border-box;
+  }
+  
+  /* Dessert Card */
+  .dessert-page__card {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 100%; /* Prevent card overflow */
+  }
+  
+  .dessert-page__card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Title */
+  .dessert-page__title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  /* Content */
+  .dessert-page__content {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 15px;
+  }
+  
+  /* Image */
+  .dessert-page__image {
+    width: 100%; /* Ensure images do not overflow */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px;
+    margin-top: 10px;
+    display: block; /* Fix inline-block issues */
+  }
+  
+  /* Loading and Error Messages */
+  .dessert-page__loading-message,
+  .dessert-page__error-message,
+  .dessert-page__no-posts-message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #555;
+    margin: 20px 0;
+  }
+  
+  .dessert-page__error-message {
+    color: red;
+  }
+  
+  /* Responsive Design */
+  
+  /* Medium Devices (Tablets) */
+  @media screen and (max-width: 768px) {
+    .dessert-page__content-wrapper {
+      padding: 15px; /* Reduce padding for tablets */
+    }
+  
+    .dessert-page__grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust grid for smaller screens */
+      gap: 15px; /* Reduce gap between cards */
+    }
+  
+    .dessert-page__title {
+      font-size: 1.3rem; /* Adjust font size for titles */
+    }
+  
+    .dessert-page__content {
+      font-size: 0.95rem; /* Adjust content font size */
+    }
+  
+    .dessert-page__card {
+      padding: 15px; /* Reduce padding inside cards */
+    }
+  }
+  
+  /* Small Devices (Phones) */
+  @media screen and (max-width: 480px) {
+    .dessert-page {
+      padding: 10px; /* Reduce overall padding */
+      
+    }
+  
+    .dessert-page__content-wrapper {
+      padding: 10px; /* Reduce padding for content */
+      margin-top: 40px;
+    }
+  
+    .dessert-page__grid {
+      grid-template-columns: 1fr; /* Single column layout */
+      gap: 10px; /* Reduce gap between cards */
+    }
+  
+    .dessert-page__title {
+      font-size: 1.2rem; /* Further adjust title font size */
+    }
+  
+    .dessert-page__content {
+      font-size: 0.9rem; /* Reduce content font size */
+    }
+  
+    .dessert-page__image {
+      height: auto; /* Adjust image height for phones */
+    }
+  
+    .dessert-page__card {
+      padding: 10px; /* Further reduce padding for cards */
+    }
+  }
+  
