@@ -10,13 +10,37 @@ body {
   
   /* Dessert Page Wrapper */
   .dessert-page {
-    max-width: 100%; /* Allow full width */
+    max-width: 1250px;
     margin: 0 auto;
-    padding: 20px; /* Add more padding */
+    padding: 10px;
     box-sizing: border-box;
     overflow-x: hidden; /* Prevent horizontal scrolling */
   }
   
+/* Search Bar Container */
+.dessert-page__search-container {
+    display: flex;
+    justify-content: center; /* Center search bar */
+    margin: 90px 10px -25px 310px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Search Input */
+  .recipe-page__search-input {
+    width: 100%;
+    max-width: 500px; /* Limit width for larger screens */
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: border 0.3s ease;
+  }
+  
+  .recipe-page__search-input:focus {
+    border-color: #007bff;
+  }
+
   /* Content Wrapper */
   .dessert-page__content-wrapper {
     max-width: 1250px; /* Increase maximum width */
@@ -122,6 +146,14 @@ body {
       padding: 10px; /* Reduce overall padding */
       
     }
+    .dessert-page__search-container {
+        margin: 10px 40px auto; /* Reduce overall margins for small screens */
+      }
+    
+      .recipe-page__search-input {
+        max-width: 100%; /* Full width on small screens */
+        padding: 8px; /* Reduce padding for smaller inputs */
+      }
   
     .dessert-page__content-wrapper {
       padding: 10px; /* Reduce padding for content */
