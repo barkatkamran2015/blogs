@@ -514,7 +514,9 @@ return (
         >
           <option value="Blog">Blog</option>
           <option value="Products Review">Products Review</option>
-          <option value="Recipe">Recipe</option>
+          <option value="Recipe">Food</option>
+          <option value="Drinks">Drinks</option>
+          <option value="Dessert">Dessert</option>
         </select>
       </div>
 
