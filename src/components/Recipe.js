@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom'; // To handle query parameters
 import Header from './Header'; // Import Header component
-import '../Food.css'; // Import the scoped CSS for the Recipe page
+import '../Recipe.css'; // Import the scoped CSS for the Recipe page
 
 const API_URL = 'https://barkatkamran.com/db.php'; // Backend API endpoint
 
