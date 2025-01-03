@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom'; // To handle query parameters
 import Header from './Header'; // Import Header component
-import '../Food.css'; // Import the scoped CSS for the Dessert page
+import '../Dessert.css'; // Import the scoped CSS for the Dessert page
 
 const API_URL = 'https://barkatkamran.com/db.php'; // Backend API endpoint
 
@@ -56,7 +56,7 @@ const Dessert = () => {
         // Scroll to the specific post if `id` is provided in the query
         if (postIdFromQuery) {
           setTimeout(() => {
-            const element = document.getElementById(`post-${postIdFromQuery}`);
+            const element = document.getElementById(`dessert-post-${postIdFromQuery}`);
             if (element) {
               element.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
@@ -98,15 +98,15 @@ const Dessert = () => {
   };
 
   return (
-    <div className="recipe-page">
+    <div className="dessert-page">
       {loading ? (
-        <div className="loading-container">
-          <div className="heart-loader"></div>
+        <div className="dessert-loading-container">
+          <div className="dessert-heart-loader"></div>
         </div>
       ) : (
         <>
           {/* Header with Search and Filters */}
-          <div className="recipe-page__search-container">
+          <div className="dessert-page__search-container">
             <Header
               onSearch={handleSearch}
               onFilterApply={handleFilterApply}
@@ -116,23 +116,23 @@ const Dessert = () => {
           </div>
 
           {/* Content Section */}
-          <div className="recipe-page__content-wrapper">
+          <div className="dessert-page__content-wrapper">
             {error ? (
-              <p className="recipe-page__error-message">{error}</p>
+              <p className="dessert-page__error-message">{error}</p>
             ) : filteredPosts.length === 0 ? (
-              <p className="recipe-page__no-posts-message">No posts available</p>
+              <p className="dessert-page__no-posts-message">No posts available</p>
             ) : (
-              <div className="recipe-page__grid">
+              <div className="dessert-page__grid">
                 {filteredPosts.map((post) => (
                   <div
                     key={post.id}
-                    id={`post-${post.id}`} // Add unique ID for scrolling
-                    className="recipe-page__card"
+                    id={`dessert-post-${post.id}`} // Add unique ID for scrolling
+                    className="dessert-page__card"
                     style={{ backgroundColor: post.backgroundColor || '#fafafa' }}
                   >
                     {/* Title */}
                     <h2
-                      className="recipe-page__title"
+                      className="dessert-page__title"
                       style={{
                         color: post.titleStyle?.color || '#000',
                         fontSize: post.titleStyle?.fontSize || '1.5rem',
@@ -144,7 +144,7 @@ const Dessert = () => {
 
                     {/* Content */}
                     <div
-                      className="recipe-page__content"
+                      className="dessert-page__content"
                       dangerouslySetInnerHTML={{ __html: post.content }}
                     />
 
@@ -153,7 +153,7 @@ const Dessert = () => {
                       <img
                         src={post.imageUrl}
                         alt={post.title}
-                        className="recipe-page__image"
+                        className="dessert-page__image"
                       />
                     )}
                   </div>
