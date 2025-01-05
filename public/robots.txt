@@ -1,3 +1,15 @@
-# https://www.robotstxt.org/robotstxt.html
+# Allow all search engines
 User-agent: *
-Disallow:
+
+# Disallow sensitive or irrelevant directories and pages
+Disallow: /customer_identity/
+Disallow: /admindashboard/
+Disallow: /adminpanel/
+Disallow: /posteditor/
+Disallow: /login/
+Disallow: /signup/
+Disallow: /*?pr_prod_strat=
+Disallow: /*?locale=
+
+# Sitemap location
+Sitemap: https://www.thestylishmama.com/sitemap.xml
