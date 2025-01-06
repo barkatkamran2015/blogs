@@ -30,7 +30,7 @@ us to connect, learn, and grow together.</p>
           <div className="social-icons">
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook-f"></i></a>
             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-twitter"></i></a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
+            <a href="https://www.instagram.com/the_stylishmama?igsh=MWhmaXJoYWRlNDRhOA%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
             <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-linkedin-in"></i></a>
           </div>
         </div>
