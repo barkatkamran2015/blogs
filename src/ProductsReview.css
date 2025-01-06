@@ -311,4 +311,12 @@ body {
     font-size: 0.9rem;
     padding: 8px 10px;
   }
+   .products-review__search-container {
+    justify-content: center; /* Center search bar */
+    margin: 10px 24px 50px 120px;
+  }
+  .products-review__search-input {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
 }
