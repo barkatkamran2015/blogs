@@ -4,34 +4,33 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f4f4f4;
-  overflow-x: hidden; /* Prevent horizontal overflow */
+  overflow-x: hidden;
   box-sizing: border-box;
 }
 
 /* Page Wrapper */
 .products-review-page {
   max-width: 1250px;
-  margin: 0 auto; /* Center the entire page */
+  margin: 0 auto;
   padding: 20px;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center all content */
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  align-items: center;
+  overflow-x: hidden;
 }
 
 /* Search Bar Container */
 .products-review__search-container {
   display: flex;
   justify-content: center; /* Center search bar */
-  margin: 80px 10px 1px 600px;
+  margin: 80px 1px -10px 560px;
   width: 100%;
   box-sizing: border-box;
 }
 
 .products-review__search-input {
   width: 100%;
-  max-width: 500px; /* Limit width for large screens */
+  max-width: 500px;
   padding: 12px;
   font-size: 1rem;
   border: 1px solid #ccc;
@@ -45,8 +44,7 @@ body {
   gap: 20px;
   justify-content: center;
   align-items: start;
-  width: 100%; /* Ensure grid fits within the viewport */
-  max-width: 100%; /* Prevent overflow */
+  width: 100%;
   box-sizing: border-box;
 }
 
@@ -60,7 +58,6 @@ body {
   flex-direction: column;
   justify-content: space-between;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  max-width: 100%; /* Prevent card overflow */
 }
 
 .products-review__card:hover {
@@ -86,12 +83,12 @@ body {
 
 /* Image */
 .products-review__image {
-  width: 100%; /* Ensure images do not overflow */
-  height: auto; /* Maintain aspect ratio */
+  width: 100%;
+  height: auto;
   border-radius: 8px;
   object-fit: cover;
   margin-top: 10px;
-  display: block; /* Fix inline-block issues */
+  display: block;
 }
 
 /* Loading and Error Messages */
@@ -113,8 +110,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full viewport height */
-  background-color: #fff; /* Optional: White background for loader */
+  height: 100vh;
+  background-color: #fff;
 }
 
 .heart-loader {
@@ -154,13 +151,102 @@ body {
   }
 }
 
+/* Comments Section */
+.comments-section {
+  background-color: pink;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.comments-section h3 {
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between comments */
+}
+
+.comment {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.comment:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.comment strong {
+  font-size: 1rem;
+  color: #0073e6;
+}
+
+.comment-date {
+  font-size: 0.85rem;
+  color: #888;
+  margin-top: 8px;
+}
+
+/* Add Comment */
+.add-comment {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between textarea and button */
+}
+
+.add-comment textarea {
+  width: 98%;
+  min-height: 40px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  resize: none;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: border 0.3s ease;
+}
+
+.add-comment textarea:focus {
+  border-color: #0073e6;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 115, 230, 0.5);
+}
+
+.add-comment button {
+  align-self: flex-end;
+  background-color: #0b9299;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.add-comment button:hover {
+  background-color: #005bb5;
+  transform: translateY(-2px);
+}
+
+.add-comment button:active {
+  transform: translateY(0);
+}
+
 /* Responsive Adjustments */
 @media screen and (max-width: 1024px) {
-  .products-review__search-container {
-    margin: 20px 0;
-    justify-content: center; /* Center for medium screens */
-  }
-
   .products-review__grid {
     gap: 15px;
   }
@@ -173,12 +259,6 @@ body {
 @media screen and (max-width: 768px) {
   .products-review-page {
     padding: 10px;
-    margin: 0; /* Ensure no horizontal overflow */
-  }
-
-  .products-review__search-container {
-    margin: 20px 0; /* Centered with consistent spacing */
-    width: 100%; /* Ensure proper alignment */
   }
 
   .products-review__grid {
@@ -194,26 +274,17 @@ body {
   }
 
   .products-review__card {
-    padding: 15px; /* Adjust padding for smaller screens */
+    padding: 15px;
   }
 }
 
 @media screen and (max-width: 480px) {
   .products-review-page {
     padding: 10px;
-    margin-top: 10px; /* Reduce top margin for smaller devices */
-  }
-
-  .products-review__search-container {
-    margin: 5px 10px 25px 90px; /* Consistent spacing on mobile */
-    justify-content: center; /* Center search bar */
   }
 
   .products-review__grid {
     gap: 20px;
-  }
-  .products-review__card{
-    margin-top: 20px;
   }
 
   .products-review__title {
@@ -225,10 +296,19 @@ body {
   }
 
   .products-review__image {
-    height: 150px; /* Smaller images for mobile */
+    height: 150px;
   }
 
   .products-review__card {
     padding: 15px;
+  }
+
+  .add-comment textarea {
+    min-height: 60px;
+  }
+
+  .add-comment button {
+    font-size: 0.9rem;
+    padding: 8px 10px;
   }
 }
