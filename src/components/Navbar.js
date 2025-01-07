@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { auth } from '../Admin/firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { Link } from 'react-router-dom';
@@ -23,6 +23,7 @@ const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState({});
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(setUser);
@@ -38,6 +39,19 @@ const Navbar = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [drawerOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setMobileMenuOpen({}); // Close dropdown if clicked outside
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleLogout = () => {
     signOut(auth)
@@ -101,23 +115,23 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
-  {menuItems.map((menu, index) =>
-    menu.dropdown ? (
-      <Box key={index} sx={{ position: 'relative' }}>
-        {/* Dropdown Toggle */}
-        <Button
-          onClick={(e) => {
-            e.preventDefault(); // Prevent navigation
-            toggleMobileMenu(menu.label); // Toggle the dropdown menu
-          }}
-          sx={{
-            color: 'white',
-            fontWeight: 'bold',
-            textTransform: 'none',
-          }}
-        >
-          {menu.label}
-        </Button>
+          {menuItems.map((menu, index) =>
+            menu.dropdown ? (
+              <Box key={index} sx={{ position: 'relative' }} ref={dropdownRef}>
+                {/* Dropdown Toggle */}
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent navigation
+                    toggleMobileMenu(menu.label); // Toggle the dropdown menu
+                  }}
+                  sx={{
+                    color: 'white',
+                    fontWeight: 'bold',
+                    textTransform: 'none',
+                  }}
+                >
+                  {menu.label}
+                </Button>
 
         {/* Dropdown Menu */}
         {mobileMenuOpen[menu.label] && (
