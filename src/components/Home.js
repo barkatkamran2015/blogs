@@ -141,6 +141,16 @@ const Home = () => {
                     >
                       {post.title}
                     </h2>
+
+                    {/* Display Post Date */}
+                    {post.date ? (
+                    <p className="home-page__post-date">
+                    Posted on: {new Date(post.date).toLocaleDateString()} {/* Only show the date */}
+                    </p>
+                    ) : (
+                    <p className="home-page__post-date">Date not available</p>
+                    )}
+
                     <div
                       className="home-page__post-excerpt"
                       dangerouslySetInnerHTML={{
