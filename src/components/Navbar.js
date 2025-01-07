@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { auth } from '../Admin/firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { Link } from 'react-router-dom';
@@ -23,6 +23,7 @@ const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState({});
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(setUser);
@@ -38,6 +39,23 @@ const Navbar = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [drawerOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setMobileMenuOpen({}); // Close dropdown if clicking outside
+      }
+    };
+
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () =>
+        document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, []);
 
   const handleLogout = () => {
     signOut(auth)
@@ -100,79 +118,82 @@ const Navbar = () => {
         </Typography>
 
         {/* Desktop Menu */}
-        <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
-  {menuItems.map((menu, index) =>
-    menu.dropdown ? (
-      <Box key={index} sx={{ position: 'relative' }}>
-        {/* Dropdown Toggle */}
-        <Button
-          onClick={(e) => {
-            e.preventDefault(); // Prevent navigation
-            toggleMobileMenu(menu.label); // Toggle the dropdown menu
-          }}
-          sx={{
-            color: 'white',
-            fontWeight: 'bold',
-            textTransform: 'none',
-          }}
+        <Box
+          sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}
+          ref={window.innerWidth > 768 ? dropdownRef : null}
         >
-          {menu.label}
-        </Button>
+          {menuItems.map((menu, index) =>
+            menu.dropdown ? (
+              <Box key={index} sx={{ position: 'relative' }}>
+                {/* Dropdown Toggle */}
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent navigation
+                    toggleMobileMenu(menu.label); // Toggle the dropdown menu
+                  }}
+                  sx={{
+                    color: 'white',
+                    fontWeight: 'bold',
+                    textTransform: 'none',
+                  }}
+                >
+                  {menu.label}
+                </Button>
 
-        {/* Dropdown Menu */}
-        {mobileMenuOpen[menu.label] && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '100%',
-              left: 0,
-              backgroundColor: '#0b9299',
-              zIndex: 1,
-              borderRadius: '4px',
-              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-            }}
-          >
-            {menu.dropdown.map((item, idx) => (
+                {/* Dropdown Menu */}
+                {mobileMenuOpen[menu.label] && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: '100%',
+                      left: 0,
+                      backgroundColor: '#0b9299',
+                      zIndex: 1,
+                      borderRadius: '4px',
+                      boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+                    }}
+                  >
+                    {menu.dropdown.map((item, idx) => (
+                      <Button
+                        key={idx}
+                        component={Link}
+                        to={item.path}
+                        onClick={() => {
+                          setMobileMenuOpen({});
+                        }}
+                        sx={{
+                          display: 'block',
+                          color: 'white',
+                          padding: '8px 16px',
+                          textAlign: 'left',
+                          textTransform: 'none',
+                          '&:hover': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                          },
+                        }}
+                      >
+                        {item.label}
+                      </Button>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+            ) : (
               <Button
-                key={idx}
+                key={index}
                 component={Link}
-                to={item.path}
-                onClick={() => {
-                  // Navigate and close the dropdown
-                  setMobileMenuOpen({}); // Close dropdown
-                }}
+                to={menu.path}
                 sx={{
-                  display: 'block',
                   color: 'white',
-                  padding: '8px 16px',
-                  textAlign: 'left',
+                  fontWeight: 'bold',
                   textTransform: 'none',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  },
                 }}
               >
-                {item.label}
+                {menu.label}
               </Button>
-            ))}
-          </Box>
-        )}
-      </Box>
-    ) : (
-      <Button
-        key={index}
-        component={Link}
-        to={menu.path}
-        sx={{
-          color: 'white',
-          fontWeight: 'bold',
-          textTransform: 'none',
-        }}
-      >
-        {menu.label}
-      </Button>
-    )
-  )}
+            )
+          )}
+        
   {!user ? (
     <>
       <Button
