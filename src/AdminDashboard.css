@@ -276,12 +276,33 @@ h2 {
 .ql-font-lucida-console { font-family: 'Lucida Console', monospace; }
 .ql-font-palatino { font-family: 'Palatino', serif; }
 
+/* Newly added fonts */
+.ql-font-right-grotesk-wide { font-family: 'Right Grotesk Wide', sans-serif; }
+.ql-font-lato { font-family: 'Lato', sans-serif; }
+.ql-font-open-sans { font-family: 'Open Sans', sans-serif; }
+.ql-font-slabo { font-family: 'Slabo', serif; }
+.ql-font-oswald { font-family: 'Oswald', sans-serif; }
+.ql-font-montserrat { font-family: 'Montserrat', sans-serif; }
+.ql-font-source-sans-pro { font-family: 'Source Sans Pro', sans-serif; }
+.ql-font-dancing-script { font-family: 'Dancing Script', cursive; }
+.ql-font-poppins { font-family: 'Poppins', sans-serif; }
+.ql-font-playfair-display { font-family: 'Playfair Display', serif; }
+.ql-font-nunito { font-family: 'Nunito', sans-serif; }
+.ql-font-merriweather { font-family: 'Merriweather', serif; }
+.ql-font-ubuntu { font-family: 'Ubuntu', sans-serif; }
+.ql-font-playwrite-deutschland-grundschrift { font-family: 'Playwrite Deutschland Grundschrift', serif; }
+.ql-font-playpen-sans { font-family: 'Playpen Sans', sans-serif; }
+
+
 /* Define dropdown content for the toolbar */
 .ql-snow .ql-picker.ql-font .ql-picker-item::before {
   content: attr(data-value);
   font-family: sans-serif;
 }
 
+.ql-font-right-grotesk-wide {
+    font-family: 'Right Grotesk Wide', sans-serif;
+}
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="roboto"]::before {
   content: "Roboto";
   font-family: 'Roboto', sans-serif;
