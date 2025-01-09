@@ -145,7 +145,7 @@ const Home = () => {
                     {/* Display Post Date */}
                     {post.date ? (
                     <p className="home-page__post-date">
-                    Posted on: {new Date(post.date).toLocaleDateString()} {/* Only show the date */}
+                    Posted on: {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                     </p>
                     ) : (
                     <p className="home-page__post-date">Date not available</p>
