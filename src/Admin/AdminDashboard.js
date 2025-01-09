@@ -16,42 +16,43 @@ Size.whitelist = ['Font-Size', '8px', '10px', '12px', '14px', '16px', '18px', '2
 Quill.register(Size, true);
 
  // Set up Font Whitelist
- const Font = Quill.import('formats/font');
- Font.whitelist = [
-     'sans-serif', // Default sans-serif
-     'serif', // Default serif
-     'monospace', // Default monospace
-     'roboto', // Clean and modern
-     'open-sans', // Friendly and readable
-     'lato', // Stylish yet readable
-     'slabo', // Serif, good for reading
-     'oswald', // Great for headers
-     'montserrat', // Modern header font
-     'source-sans-pro', // Professional, good for UI
-     'arial', // Widely used sans-serif
-     'times-new-roman', // Traditional serif font
-     'courier-new', // Classic monospaced font
-     'comic-sans-ms', // Casual script-like font
-     'georgia', // Elegant serif font
-     'helvetica', // Classic and professional
-     'verdana', // Clear and easy to read
-     'calibri', // Modern sans-serif
-     'garamond', // Classic and formal serif
-     'tahoma', // Similar to Verdana, but with a narrower body
-     'impact', // Bold and attention-grabbing
-     'trebuchet-ms', // Humanist sans-serif
-     'lucida-console', // Readable monospace
-     'palatino', // Formal and readable serif
-     'dancing-script', // Cursive, casual script
-     'poppins', // Modern and geometric
-     'playfair-display', // High contrast serif, good for titles
-     'nunito', // Rounded, friendly sans-serif
-     'merriweather', // Traditional and readable serif
-     'ubuntu', // Contemporary and geometric
-     'playwrite-deutschland-grundschrift', // Custom serif font
-     'playpen-sans' // Custom sans-serif font
- ];
- Quill.register(Font, true); 
+const Font = Quill.import('formats/font');
+Font.whitelist = [
+    'sans-serif', // Default sans-serif
+    'serif', // Default serif
+    'right-grotesk-wide' // Newly added font
+    'monospace', // Default monospace
+    'roboto', // Clean and modern
+    'open-sans', // Friendly and readable
+    'lato', // Stylish yet readable
+    'slabo', // Serif, good for reading
+    'oswald', // Great for headers
+    'montserrat', // Modern header font
+    'source-sans-pro', // Professional, good for UI
+    'arial', // Widely used sans-serif
+    'times-new-roman', // Traditional serif font
+    'courier-new', // Classic monospaced font
+    'comic-sans-ms', // Casual script-like font
+    'georgia', // Elegant serif font
+    'helvetica', // Classic and professional
+    'verdana', // Clear and easy to read
+    'calibri', // Modern sans-serif
+    'garamond', // Classic and formal serif
+    'tahoma', // Similar to Verdana, but with a narrower body
+    'impact', // Bold and attention-grabbing
+    'trebuchet-ms', // Humanist sans-serif
+    'lucida-console', // Readable monospace
+    'palatino', // Formal and readable serif
+    'dancing-script', // Cursive, casual script
+    'poppins', // Modern and geometric
+    'playfair-display', // High contrast serif, good for titles
+    'nunito', // Rounded, friendly sans-serif
+    'merriweather', // Traditional and readable serif
+    'ubuntu', // Contemporary and geometric
+    'playwrite-deutschland-grundschrift', // Custom serif font
+    'playpen-sans', // Custom sans-serif font
+];
+Quill.register(Font, true);
  
  // Helper Component: PostContent
  const PostContent = ({ content }) => {
