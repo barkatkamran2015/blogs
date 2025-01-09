@@ -1,3 +1,4 @@
+
 /* General Styling */
 body {
   font-family: Arial, sans-serif;
@@ -249,8 +250,16 @@ h2 {
   margin-bottom: 20px;
 }
 
-
 /* Define font classes for the editor content */
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=dancing-script],
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=dancing-script] {
+    font-family: 'Dancing Script', cursive;
+}
+
+.ql-font-dancing-script {
+    font-family: 'Dancing Script', cursive;
+}
+
 .ql-font-roboto { font-family: 'Roboto', sans-serif; }
 .ql-font-arial { font-family: 'Arial', sans-serif; }
 .ql-font-times-new-roman { font-family: 'Times New Roman', serif; }
