@@ -33,7 +33,7 @@ us to connect, learn, and grow together.</p>
           </div>
         </div>
         <div className="footer-section contact">
-          <h2>Contact Us</h2>
+          <h2>Contact Me</h2>
           <p><i className="fas fa-envelope"></i> fatimarezaie1234@gmail.com</p>
         </div>
       </div>
