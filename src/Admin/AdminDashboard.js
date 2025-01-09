@@ -20,7 +20,7 @@ const Font = Quill.import('formats/font');
 Font.whitelist = [
     'sans-serif', // Default sans-serif
     'serif', // Default serif
-    'right-grotesk-wide' // Newly added font
+    'right-grotesk-wide', // Newly added font
     'monospace', // Default monospace
     'roboto', // Clean and modern
     'open-sans', // Friendly and readable
