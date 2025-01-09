@@ -8,7 +8,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section about">
-          <h2>About Us</h2>
+          <h2>About Me</h2>
           <p>Welcome to our space! Moms from all around the world, let’s come
 together to share our experiences, support one another, and dive into
 the beautiful journey of motherhood. Whether you're an immigrant mom
@@ -26,12 +26,10 @@ us to connect, learn, and grow together.</p>
           </ul>
         </div>
         <div className="footer-section social">
-          <h2>Follow Us</h2>
+          <h2>Follow Me</h2>
           <div className="social-icons">
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook-f"></i></a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-twitter"></i></a>
             <a href="https://www.instagram.com/the_stylishmama?igsh=MWhmaXJoYWRlNDRhOA%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-linkedin-in"></i></a>
           </div>
         </div>
         <div className="footer-section contact">
