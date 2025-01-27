@@ -1,6 +1,10 @@
 # Allow all search engines
 User-agent: *
 
+# Allow Googlebot and other bots to access JavaScript and CSS files
+Allow: /static/js/*
+Allow: /static/css/*
+
 # Disallow sensitive or irrelevant directories and pages
 Disallow: /customer_identity/
 Disallow: /admindashboard/
@@ -10,4 +14,3 @@ Disallow: /login/
 Disallow: /signup/
 Disallow: /*?locale=
 Disallow: /footer/
-
