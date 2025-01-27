@@ -8,9 +8,6 @@ Disallow: /adminpanel/
 Disallow: /posteditor/
 Disallow: /login/
 Disallow: /signup/
-Disallow: /*?pr_prod_strat=
 Disallow: /*?locale=
-Disallow: /footer/  # Example: If the footer is dynamically served
+Disallow: /footer/
 
-# Sitemap location
-Sitemap: https://www.thestylishmama.com/sitemap.xml
