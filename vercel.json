@@ -1,10 +1,5 @@
 {
   "build": {
-    "env": {
-      "NODE_ENV": "production"
-    },
-    "commands": {
-      "build": "node generateSitemap.js && next build"
-    }
+    "command": "node generate_sitemap.js && next build"
   }
 }
