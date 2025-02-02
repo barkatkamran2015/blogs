@@ -1,5 +1,13 @@
 {
-  "build": {
-    "command": "node generate_sitemap.js && next build"
-  }
+  "headers": [
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml"
+        }
+      ]
+    }
+  ]
 }
