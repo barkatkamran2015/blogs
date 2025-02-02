@@ -1,16 +1,18 @@
-# Allow all search engines
 User-agent: *
+Allow: /$
 
-# Allow Googlebot and other bots to access JavaScript and CSS files
-Allow: /static/js/*
-Allow: /static/css/*
-
-# Disallow sensitive or irrelevant directories and pages
+# Sensitive areas
 Disallow: /customer_identity/
 Disallow: /admindashboard/
 Disallow: /adminpanel/
 Disallow: /posteditor/
 Disallow: /login/
 Disallow: /signup/
-Disallow: /*?locale=
-Disallow: /footer/
+
+# Parameter handling
+Disallow: /*?*utm_
+Disallow: /*?*sessionid=
+Disallow: /*?*token=
+
+# Sitemap declaration
+Sitemap: https://www.thestylishmama.com/sitemap.xml
