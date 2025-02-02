@@ -1,0 +1,41 @@
+name: Build and Generate Sitemap
+
+# Trigger the workflow on push or pull request to the main branch
+on:
+  push:
+    branches:
+      - main  # Change this if you're using a different branch (e.g., 'master')
+  pull_request:
+    branches:
+      - main  # Change this if you're using a different branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # This sets the virtual environment to run on the latest Ubuntu
+
+    steps:
+    # Step 1: Checkout the code from the repository
+    - name: Checkout code
+      uses: actions/checkout@v2  # This checks out your repository's code
+
+    # Step 2: Set up Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'  # You can specify the version of Node.js you're using
+
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: |
+        npm install  # Installs all the dependencies from package.json
+
+    # Step 4: Generate Sitemap and Build the Next.js Project
+    - name: Generate Sitemap and Build
+      run: |
+        node generate_sitemap.js && next build  # Runs your sitemap generation and Next.js build
+
+    # Optional Step 5: Deploy (if you have deployment steps, e.g., Vercel or Netlify)
+    - name: Deploy (if needed)
+      run: |
+        # Add deployment steps if necessary (e.g., Vercel or Netlify CLI commands)
+        # Example: vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
