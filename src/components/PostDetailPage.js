@@ -20,7 +20,7 @@ const PostDetailPage = () => {
 
     const fetchPost = async () => {
       try {
-        const response = await fetch(`https://www.thestylishmama.com/db.php/${postId}`, {
+        const response = await fetch(`https://www.barkatkamran.com/db.php/${postId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
