@@ -20,13 +20,13 @@ const PostDetailPage = () => {
 
     const fetchPost = async () => {
   try {
-    const response = await fetch(https://www.thestylishmama.com/api/posts/${postId}, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      signal: controller.signal, // Attach the abort signal
-    });
+    const response = await fetch(`https://www.thestylishmama.com/api/posts/${postId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          signal: controller.signal, // Attach the abort signal
+        });
 
     if (!response.ok) {
       if (response.status === 404) {
