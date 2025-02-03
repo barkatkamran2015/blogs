@@ -1,20 +1,21 @@
 /* Container for the post details */
 .post-detail-container {
   padding: 20px;
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  font-family: 'Arial', sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Common font family */
 }
 
 /* Post title styling */
 .post-detail-container h1 {
-  font-size: 2.5rem;
+  font-size: 1.5rem; /* Smaller font size for title */
   font-weight: bold;
   margin-bottom: 20px;
   color: #333;
+  text-align: left; /* Align title to the left */
 }
 
 /* Post content (paragraphs and text formatting) */
@@ -23,6 +24,7 @@
   line-height: 1.6;
   margin-bottom: 20px;
   color: #555;
+  text-align: justify; /* Justify text content */
 }
 
 /* Image styling */
@@ -39,7 +41,7 @@
   font-size: 1rem;
   color: #888;
   margin-top: 10px;
-  text-align: center;
+  text-align: left; /* Align date to the left */
 }
 
 /* Loading and Error States */
@@ -65,7 +67,7 @@
   }
 
   .post-detail-container h1 {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .post-detail-container div {
