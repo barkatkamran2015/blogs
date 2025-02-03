@@ -1,87 +1,93 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import '../PostDetailPage.css';
+
+const API_URL = 'https://barkatkamran.com/db.php';
 
 const PostDetailPage = () => {
-  const { id } = useParams(); // Get post ID from URL
-  const postId = Number(id) || parseInt(id, 10); // Ensure it's a valid number
+  const [post, setPost] = useState(null); // Post data
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(''); // Error state
 
-  const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // Get the post ID from URL query parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const postId = urlParams.get('id');
 
   useEffect(() => {
-    if (!postId || isNaN(postId)) {
-      setError('Invalid post ID.');
-      setLoading(false);
-      return;
-    }
-
-    const controller = new AbortController(); // Create an abort controller for cleanup
-
-    const fetchPost = async () => {
+    const fetchPostDetails = async () => {
       try {
-        const response = await fetch(`https://barkatkamran.com/api/posts/${postId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include', // Include credentials if using cookies
-          signal: controller.signal, // Attach the abort signal
-        });
-
-        if (!response.ok) {
-          if (response.status === 404) {
-            throw new Error('Post not found.');
-          }
-          if (response.status === 500) {
-            throw new Error('Server error. Please try again later.');
-          }
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        if (!postId) {
+          setError('Post ID is missing in the URL.');
+          setLoading(false);
+          return;
         }
 
-        // Check if the response is JSON
-        const contentType = response.headers.get('Content-Type');
-        if (!contentType || !contentType.includes('application/json')) {
-          throw new Error('Expected JSON, but received something else.');
-        }
+        setLoading(true);
+        const response = await fetch(`${API_URL}?method=GET_POST&id=${postId}`);
+        if (!response.ok) throw new Error('Failed to fetch post details');
 
         const data = await response.json();
-        setPost(data);
+        const formattedPost = {
+          ...data,
+          titleStyle: data.titleStyle ? JSON.parse(data.titleStyle) : { color: '#000', fontSize: '2rem', textAlign: 'center' },
+        };
+
+        setPost(formattedPost);
       } catch (err) {
-        if (err.name === 'AbortError') return; // Ignore aborted requests
-        console.error('Fetch error:', err);
-        setError(err.message);
+        console.error('Error fetching post details:', err);
+        setError('Failed to load post details. Please try again.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPost();
-
-    return () => controller.abort(); // Cleanup: Abort fetch on unmount
+    fetchPostDetails();
   }, [postId]);
 
-  // Render loading state
-  if (loading) return <div>Loading...</div>;
-
-  // Render error state
-  if (error) return <div>Error: {error}</div>;
-
-  // Render the post details when available
   return (
-    <div>
-      {post ? (
-        <>
-          <h1>{post.title}</h1>
-          <div dangerouslySetInnerHTML={{ __html: post.content }} /> {/* Render HTML content safely */}
-          <img
-            src={post.imageUrl || 'https://via.placeholder.com/150'}
-            alt={post.title || 'Post Image'}
-          />
-          <p>Posted on: {new Date(post.created_at).toLocaleDateString()}</p>
-        </>
+    <div className="post-detail-page">
+      {/* Loading and Error States */}
+      {loading ? (
+        <div className="loading-container">
+          <div className="heart-loader"></div>
+        </div>
+      ) : error ? (
+        <p className="error-message">{error}</p>
       ) : (
-        <p>Post not found.</p> // Display if post data is empty
+        post && (
+          <div className="post-detail-container">
+            {/* Post Image */}
+            {post.imageUrl && (
+              <img src={post.imageUrl} alt={post.title} className="post-detail-image" />
+            )}
+
+            {/* Post Content */}
+            <h1
+              className="post-detail-title"
+              style={{
+                color: post.titleStyle?.color || '#333',
+                fontSize: post.titleStyle?.fontSize || '2rem',
+                textAlign: post.titleStyle?.textAlign || 'center',
+              }}
+            >
+              {post.title}
+            </h1>
+
+            {/* Post Date */}
+            {post.created_at ? (
+              <p className="post-detail-date">
+                Posted on: {new Date(post.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </p>
+            ) : (
+              <p className="post-detail-date">Date not available</p>
+            )}
+
+            {/* Post Content */}
+            <div
+              className="post-detail-content"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+          </div>
+        )
       )}
     </div>
   );
