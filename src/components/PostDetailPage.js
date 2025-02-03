@@ -20,6 +20,10 @@ const PostDetailPage = () => {
         const response = await fetch(`https://barkatkamran.com/posts?id=${id}&method=GET_POST`);
         
         if (!response.ok) {
+          // If the response is not OK, check the status code
+          if (response.status === 404) {
+            throw new Error('Post not found.');
+          }
           const errorText = await response.text(); // Get the raw error message
           throw new Error(`Failed to fetch post: ${errorText}`);
         }
