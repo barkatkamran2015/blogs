@@ -5,7 +5,9 @@ import {
   Routes,
   Navigate,
   useParams,  // To access the dynamic URL parameter
+  useLocation  // Import useLocation hook
 } from "react-router-dom";
+
 // Import your components
 import Navbar from "./components/Navbar";
 import Footer from "./Footer";
