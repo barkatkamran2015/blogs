@@ -67,7 +67,8 @@
   }
 
   .post-detail-container h1 {
-    font-size: 1.75rem;
+    font-size: 1rem;
+    text-align: center;
   }
 
   .post-detail-container div {
