@@ -11,7 +11,7 @@ const PostDetailPage = () => {
     // Fetch the post details from the API
     const fetchPost = async () => {
       try {
-        const response = await fetch(`https://your-api-endpoint.com/posts?id=${id}&method=GET_POST`);
+        const response = await fetch(`https://barkatkamran.com/posts?id=${id}&method=GET_POST`);
         
         if (!response.ok) {
           throw new Error('Failed to fetch post');
