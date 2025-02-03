@@ -4,10 +4,11 @@ import {
   Route,
   Routes,
   Navigate,
-  useLocation,
+  useParams,  // To access the dynamic URL parameter
 } from "react-router-dom";
+// Import your components
 import Navbar from "./components/Navbar";
-import Footer from "./Footer"; // Import the Footer component
+import Footer from "./Footer";
 import Home from "./components/Home";
 import About from "./components/About";
 import Contact from "./components/Contact";
@@ -17,14 +18,15 @@ import AdminDashboard from "./Admin/AdminDashboard";
 import AdminPanel from "./Admin/AdminPanel";
 import PostEditor from "./Admin/PostEditor";
 import Blog from "./components/Blog";
-import Food from "./components/Recipe"; // Recipe component is now named "Food"
-import Drinks from "./components/Drinks"; // Import Drinks component
-import Dessert from "./components/Dessert"; // Import Dessert component
+import Food from "./components/Recipe"; 
+import Drinks from "./components/Drinks";
+import Dessert from "./components/Dessert"; 
 import ProductsReview from "./components/ProductsReview";
-import StyleAdvisor from "./components/StyleAdvisor"; // Import StyleAdvisor component
+import StyleAdvisor from "./components/StyleAdvisor"; 
+import PostDetailPage from "./components/PostDetailPage";  // New component for post details
 import { auth } from "./Admin/firebaseConfig";
 
-// Protected Route component to handle authentication checks
+// Protected Route component
 const ProtectedRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -50,12 +52,10 @@ const ProtectedRoute = ({ children }) => {
 const FooterWrapper = () => {
   const location = useLocation();
 
-  // Define the routes where the footer should NOT appear
   const noFooterRoutes = ["/login", "/signup"];
 
-  // Check if the current route is one of the no-footer routes
   if (noFooterRoutes.includes(location.pathname)) {
-    return null; // Do not render the footer
+    return null;
   }
 
   return <Footer />;
@@ -68,7 +68,6 @@ const App = () => {
         id="app-layout"
         style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >
-        {/* Navbar remains persistent across routes */}
         <Navbar />
 
         <div style={{ flex: 1 }}>
@@ -78,15 +77,15 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/food" element={<Food />} />
-            <Route path="/drinks" element={<Drinks />} /> {/* Drinks Route */}
-            <Route path="/dessert" element={<Dessert />} /> {/* Dessert Route */}
+            <Route path="/drinks" element={<Drinks />} />
+            <Route path="/dessert" element={<Dessert />} />
             <Route path="/products-review" element={<ProductsReview />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/style-advisor" element={<StyleAdvisor />} /> {/* New Route */}
+            <Route path="/style-advisor" element={<StyleAdvisor />} />
             <Route path="/login" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
 
-            {/* Admin Protected Routes */}
+            {/* Admin Routes */}
             <Route
               path="/admindashboard"
               element={
@@ -111,10 +110,12 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+
+            {/* Dynamic Route for Post Detail */}
+            <Route path="/posts/:id" element={<PostDetailPage />} />
           </Routes>
         </div>
 
-        {/* Conditionally render the Footer */}
         <FooterWrapper />
       </div>
     </Router>
