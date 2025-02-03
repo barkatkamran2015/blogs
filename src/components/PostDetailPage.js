@@ -12,15 +12,22 @@ const PostDetailPage = () => {
     const fetchPost = async () => {
       try {
         const response = await fetch(`https://your-api-endpoint.com/posts?id=${id}&method=GET_POST`);
-        const data = await response.json();
         
-        if (response.ok) {
-          setPost(data);  // Set post data
+        if (!response.ok) {
+          throw new Error('Failed to fetch post');
+        }
+
+        const data = await response.json();
+
+        // Handle API response and set state
+        if (data) {
+          setPost(data);
         } else {
-          throw new Error(data.message || 'Failed to fetch post');
+          throw new Error('Post not found');
         }
       } catch (err) {
-        setError(err.message);
+        console.error('Error fetching post:', err);
+        setError(err.message); // Set error state for display
       } finally {
         setLoading(false);
       }
@@ -29,20 +36,28 @@ const PostDetailPage = () => {
     fetchPost();
   }, [id]);  // Re-run if the ID changes
 
+  // Render loading state
   if (loading) return <div>Loading...</div>;
+
+  // Render error state
   if (error) return <div>Error: {error}</div>;
 
+  // Render the post details when available
   return (
     <div>
       {post ? (
         <>
           <h1>{post.title}</h1>
           <div>{post.content}</div>
-          <img src={post.imageUrl} alt={post.title} />
-          <p>Posted on: {post.created_at}</p>
+          {/* Render image with a fallback if the image URL is missing */}
+          <img 
+            src={post.imageUrl || 'https://via.placeholder.com/150'} 
+            alt={post.title || 'Post Image'} 
+          />
+          <p>Posted on: {new Date(post.created_at).toLocaleDateString()}</p>
         </>
       ) : (
-        <p>Post not found.</p>
+        <p>Post not found.</p> // Display if post data is empty
       )}
     </div>
   );
