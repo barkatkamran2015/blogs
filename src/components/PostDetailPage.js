@@ -16,33 +16,28 @@ const PostDetailPage = () => {
 
     // Fetch the post details from the API
     const fetchPost = async () => {
-      try {
-        const response = await fetch(`https://barkatkamran.com/posts?id=${id}&method=GET_POST`);
-        
-        if (!response.ok) {
-          // If the response is not OK, check the status code
-          if (response.status === 404) {
-            throw new Error('Post not found.');
-          }
-          const errorText = await response.text(); // Get the raw error message
-          throw new Error(`Failed to fetch post: ${errorText}`);
-        }
+  try {
+    const response = await fetch(`https://barkatkamran.com/posts?id=${id}&method=GET_POST`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-        const data = await response.json();
-        console.log(data); // Log data for debugging
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error ${response.status}: ${errorText}`);
+    }
 
-        if (data) {
-          setPost(data);
-        } else {
-          throw new Error('Post not found');
-        }
-      } catch (err) {
-        console.error('Error fetching post:', err);
-        setError(err.message); // Set error state for display
-      } finally {
-        setLoading(false);
-      }
-    };
+    const data = await response.json();
+    setPost(data);
+  } catch (err) {
+    console.error('Fetch error:', err);
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
     fetchPost();
   }, [id]);  // Re-run if the ID changes
