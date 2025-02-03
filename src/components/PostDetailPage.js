@@ -19,44 +19,44 @@ const PostDetailPage = () => {
     const controller = new AbortController(); // Create an abort controller for cleanup
 
     const fetchPost = async () => {
-      try {
-        const response = await fetch(`https://www.barkatkamran.com/db.php/${postId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          signal: controller.signal, // Attach the abort signal
-        });
+  try {
+    const response = await fetch(`https://www.barkatkamran.com/db.php?method=GET_POST&id=${postId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      signal: controller.signal, // Attach the abort signal
+    });
 
-        if (!response.ok) {
-          if (response.status === 404) {
-            throw new Error('Post not found.');
-          }
-          if (response.status === 500) {
-            throw new Error('Server error. Please try again later.');
-          }
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
-        }
-
-        // Check if the response is JSON
-        const contentType = response.headers.get("Content-Type");
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new Error("Expected JSON, but received something else.");
-        }
-
-        // Attempt to parse the response as JSON
-        const data = await response.json();
-        setPost(data);
-      } catch (err) {
-        if (err.name === 'AbortError') return; // Ignore aborted requests
-        console.error('Fetch error:', err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error('Post not found.');
       }
-    };
+      if (response.status === 500) {
+        throw new Error('Server error. Please try again later.');
+      }
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
 
-    fetchPost();
+    // Check if the response is JSON
+    const contentType = response.headers.get("Content-Type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Expected JSON, but received something else.");
+    }
+
+    // Attempt to parse the response as JSON
+    const data = await response.json();
+    setPost(data);
+  } catch (err) {
+    if (err.name === 'AbortError') return; // Ignore aborted requests
+    console.error('Fetch error:', err);
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+fetchPost();
 
     return () => controller.abort(); // Cleanup: Abort fetch on unmount
   }, [postId]);
