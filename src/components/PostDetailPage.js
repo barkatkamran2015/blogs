@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import '../PostDetailPage.css';
+
 
 const PostDetailPage = () => {
   const { id } = useParams(); // Get post ID from URL
@@ -19,61 +21,55 @@ const PostDetailPage = () => {
     const controller = new AbortController(); // Create an abort controller for cleanup
 
     const fetchPost = async () => {
-  try {
-    const response = await fetch(`https://www.barkatkamran.com/db.php?method=GET_POST&id=${postId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      signal: controller.signal, // Attach the abort signal
-    });
+      try {
+        const response = await fetch(`https://www.barkatkamran.com/db.php?method=GET_POST&id=${postId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          signal: controller.signal, // Attach the abort signal
+        });
 
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Post not found.');
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('Post not found.');
+          }
+          if (response.status === 500) {
+            throw new Error('Server error. Please try again later.');
+          }
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+
+        const contentType = response.headers.get("Content-Type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("Expected JSON, but received something else.");
+        }
+
+        const data = await response.json();
+        setPost(data);
+      } catch (err) {
+        if (err.name === 'AbortError') return; // Ignore aborted requests
+        console.error('Fetch error:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
-      if (response.status === 500) {
-        throw new Error('Server error. Please try again later.');
-      }
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
+    };
 
-    // Check if the response is JSON
-    const contentType = response.headers.get("Content-Type");
-    if (!contentType || !contentType.includes("application/json")) {
-      throw new Error("Expected JSON, but received something else.");
-    }
-
-    // Attempt to parse the response as JSON
-    const data = await response.json();
-    setPost(data);
-  } catch (err) {
-    if (err.name === 'AbortError') return; // Ignore aborted requests
-    console.error('Fetch error:', err);
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
-
-fetchPost();
+    fetchPost();
 
     return () => controller.abort(); // Cleanup: Abort fetch on unmount
   }, [postId]);
 
-  // Render loading state
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="loading">Loading...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
 
-  // Render error state
-  if (error) return <div>Error: {error}</div>;
-
-  // Render the post details when available
   return (
-    <div>
+    <div className="post-detail-container">
       {post ? (
         <>
           <h1>{post.title}</h1>
-          <div>{post.content}</div>
+          <div dangerouslySetInnerHTML={{ __html: post.content }} />
           <img 
             src={post.imageUrl || 'https://via.placeholder.com/150'} 
             alt={post.title || 'Post Image'} 
@@ -81,10 +77,11 @@ fetchPost();
           <p>Posted on: {new Date(post.created_at).toLocaleDateString()}</p>
         </>
       ) : (
-        <p>Post not found.</p> // Display if post data is empty
+        <p className="post-not-found">Post not found.</p>
       )}
     </div>
   );
 };
+
 
 export default PostDetailPage;
