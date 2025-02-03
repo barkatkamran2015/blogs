@@ -8,18 +8,25 @@ const PostDetailPage = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!id || isNaN(id)) {
+      setError('Invalid post ID.');
+      setLoading(false);
+      return;
+    }
+
     // Fetch the post details from the API
     const fetchPost = async () => {
       try {
         const response = await fetch(`https://barkatkamran.com/posts?id=${id}&method=GET_POST`);
         
         if (!response.ok) {
-          throw new Error('Failed to fetch post');
+          const errorText = await response.text(); // Get the raw error message
+          throw new Error(`Failed to fetch post: ${errorText}`);
         }
 
         const data = await response.json();
+        console.log(data); // Log data for debugging
 
-        // Handle API response and set state
         if (data) {
           setPost(data);
         } else {
@@ -49,7 +56,6 @@ const PostDetailPage = () => {
         <>
           <h1>{post.title}</h1>
           <div>{post.content}</div>
-          {/* Render image with a fallback if the image URL is missing */}
           <img 
             src={post.imageUrl || 'https://via.placeholder.com/150'} 
             alt={post.title || 'Post Image'} 
