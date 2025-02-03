@@ -10,7 +10,7 @@ const PostDetailPage = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!postId) {
+    if (!postId || isNaN(postId)) {
       setError('Invalid post ID.');
       setLoading(false);
       return;
@@ -19,42 +19,42 @@ const PostDetailPage = () => {
     const controller = new AbortController(); // Create an abort controller for cleanup
 
     const fetchPost = async () => {
-  try {
-    const response = await fetch(`https://www.thestylishmama.com/api/posts/${postId}`, {
+      try {
+        const response = await fetch(`https://barkatkamran.com/api/posts/${postId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
+          credentials: 'include', // Include credentials if using cookies
           signal: controller.signal, // Attach the abort signal
         });
 
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Post not found.');
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('Post not found.');
+          }
+          if (response.status === 500) {
+            throw new Error('Server error. Please try again later.');
+          }
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+
+        // Check if the response is JSON
+        const contentType = response.headers.get('Content-Type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Expected JSON, but received something else.');
+        }
+
+        const data = await response.json();
+        setPost(data);
+      } catch (err) {
+        if (err.name === 'AbortError') return; // Ignore aborted requests
+        console.error('Fetch error:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
-      if (response.status === 500) {
-        throw new Error('Server error. Please try again later.');
-      }
-      throw new Error(Error ${response.status}: ${response.statusText});
-    }
-
-    // Check if the response is JSON
-    const contentType = response.headers.get("Content-Type");
-    if (!contentType || !contentType.includes("application/json")) {
-      throw new Error("Expected JSON, but received something else.");
-    }
-
-    con};
-st data = await response.json();
-    setPost(data);
-  } catch (err) {
-    if (err.name === 'AbortError') return; // Ignore aborted requests
-    console.error('Fetch error:', err);
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
-
+    };
 
     fetchPost();
 
@@ -73,10 +73,10 @@ st data = await response.json();
       {post ? (
         <>
           <h1>{post.title}</h1>
-          <div>{post.content}</div>
-          <img 
-            src={post.imageUrl || 'https://via.placeholder.com/150'} 
-            alt={post.title || 'Post Image'} 
+          <div dangerouslySetInnerHTML={{ __html: post.content }} /> {/* Render HTML content safely */}
+          <img
+            src={post.imageUrl || 'https://via.placeholder.com/150'}
+            alt={post.title || 'Post Image'}
           />
           <p>Posted on: {new Date(post.created_at).toLocaleDateString()}</p>
         </>
