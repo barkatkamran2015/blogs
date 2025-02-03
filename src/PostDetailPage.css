@@ -1,0 +1,82 @@
+/* Container for the post details */
+.post-detail-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+}
+
+/* Post title styling */
+.post-detail-container h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Post content (paragraphs and text formatting) */
+.post-detail-container div {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+/* Image styling */
+.post-detail-container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Date styling */
+.post-detail-container p {
+  font-size: 1rem;
+  color: #888;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Loading and Error States */
+.loading, .error {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 50px;
+  color: #e74c3c;
+}
+
+/* Post not found message */
+.post-not-found {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 50px;
+  color: #f39c12;
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+  .post-detail-container {
+    padding: 15px;
+  }
+
+  .post-detail-container h1 {
+    font-size: 2rem;
+  }
+
+  .post-detail-container div {
+    font-size: 1rem;
+  }
+
+  .post-detail-container img {
+    margin-top: 15px;
+  }
+
+  .post-detail-container p {
+    font-size: 0.9rem;
+  }
+}
