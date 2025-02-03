@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import '../PostDetailPage.css';
 
 const API_URL = 'https://barkatkamran.com/db.php';
 
