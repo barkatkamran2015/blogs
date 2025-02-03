@@ -57,7 +57,6 @@ const FooterWrapper = () => {
   if (noFooterRoutes.includes(location.pathname)) {
     return null;
   }
-
   return <Footer />;
 };
 
