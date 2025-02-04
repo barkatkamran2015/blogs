@@ -14,37 +14,34 @@ const Dessert = () => {
   const [loading, setLoading] = useState(true);
 
   const location = useLocation(); // To access query parameters from the URL
-
-  // Extract `id` from URL query parameters for scrolling
   const queryParams = new URLSearchParams(location.search);
   const postIdFromQuery = queryParams.get('id');
 
-  // Fetch Dessert posts on mount
+  // Keep track of viewed posts in session storage
+  const viewedPosts = new Set(JSON.parse(sessionStorage.getItem('viewedDessertPosts') || '[]'));
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
         const response = await fetch(`${API_URL}?page=Dessert`);
-
         if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
 
         const data = await response.json();
-        console.log('Fetched Dessert Posts:', data); // Debug fetched posts
+        console.log('Fetched Dessert Posts:', data);
 
         const dessertPosts = data
           .filter((post) => post.page === 'Dessert')
           .map((post) => ({
             ...post,
             titleStyle: post.titleStyle
-              ? JSON.parse(post.titleStyle) // Parse `titleStyle` if it exists
+              ? JSON.parse(post.titleStyle)
               : { color: '#000', fontSize: '1.5rem', textAlign: 'left' }, // Default style
           }));
 
-        // Set posts and filtered posts
         setPosts(dessertPosts);
         setFilteredPosts(dessertPosts);
 
-        // Extract unique categories and tags
         const uniqueCategories = [...new Set(dessertPosts.map((post) => post.category))];
         const uniqueTags = [...new Set(dessertPosts.flatMap((post) => post.tags || []))];
 
@@ -53,14 +50,11 @@ const Dessert = () => {
 
         if (dessertPosts.length === 0) setError('No posts found for the Dessert page.');
 
-        // Scroll to the specific post if `id` is provided in the query
         if (postIdFromQuery) {
           setTimeout(() => {
             const element = document.getElementById(`dessert-post-${postIdFromQuery}`);
-            if (element) {
-              element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-          }, 500); // Delay ensures DOM is rendered
+            if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 500);
         }
       } catch (err) {
         console.error('Error fetching posts:', err);
@@ -73,10 +67,25 @@ const Dessert = () => {
     fetchPosts();
   }, [postIdFromQuery]);
 
+  // Function to increment view count
+  const incrementViewCount = async (postId) => {
+    if (viewedPosts.has(postId)) return; // Prevent multiple increments per session
+
+    try {
+      await fetch(`${API_URL}?method=INCREMENT_VIEW_COUNT&postId=${postId}`, { method: 'POST' });
+      console.log(`View count incremented for post ${postId}`);
+
+      viewedPosts.add(postId);
+      sessionStorage.setItem('viewedDessertPosts', JSON.stringify([...viewedPosts]));
+    } catch (err) {
+      console.error('Error incrementing view count:', err);
+    }
+  };
+
   // Search functionality
   const handleSearch = (searchTerm) => {
     if (!searchTerm.trim()) {
-      setFilteredPosts(posts); // Reset to all posts if search term is empty
+      setFilteredPosts(posts);
     } else {
       const filtered = posts.filter(
         (post) =>
@@ -99,13 +108,13 @@ const Dessert = () => {
 
   // Handle share functionality
   const handleShare = (post) => {
-    const postUrl = `https://www.thestylishmama.com/posts/${post.id}`; // Dynamically created post URL in the desired format
-    
+    const postUrl = `https://www.thestylishmama.com/posts/${post.id}`;
+
     if (navigator.share) {
       navigator.share({
         title: post.title,
         text: 'Check out this amazing post!',
-        url: postUrl, // Share the specific post's URL
+        url: postUrl,
       })
       .then(() => console.log('Post shared successfully'))
       .catch((error) => console.error('Error sharing:', error));
@@ -145,9 +154,10 @@ const Dessert = () => {
                 {filteredPosts.map((post) => (
                   <div
                     key={post.id}
-                    id={`dessert-post-${post.id}`} // Add unique ID for scrolling
+                    id={`dessert-post-${post.id}`}
                     className="dessert-page__card"
                     style={{ backgroundColor: post.backgroundColor || '#fafafa' }}
+                    onMouseEnter={() => incrementViewCount(post.id)} // View tracking
                   >
                     {/* Title */}
                     <h2
@@ -177,10 +187,7 @@ const Dessert = () => {
                     )}
 
                     {/* Share Button */}
-                    <button
-                      className="share-button"
-                      onClick={() => handleShare(post)}
-                    >
+                    <button className="share-button" onClick={() => handleShare(post)}>
                       🔗 Share
                     </button>
                   </div>
