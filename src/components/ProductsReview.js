@@ -79,30 +79,48 @@ const ProductsReview = () => {
   }, [posts]);
 
   // Handle adding a new comment
-  // Handle adding a new comment
-const handleAddComment = async (postId) => {
-  const comment = newComments[postId]?.trim();
-  if (!comment) return;
+  const handleAddComment = async (postId) => {
+    const comment = newComments[postId]?.trim();
+    if (!comment) return;
 
-  try {
-    const response = await fetch(`${API_URL}?method=ADD_COMMENT`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ post_id: postId, content: comment }),
-    });
+    try {
+      const response = await fetch(`${API_URL}?method=ADD_COMMENT`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ post_id: postId, content: comment }),
+      });
 
-    if (!response.ok) throw new Error('Failed to add comment.');
+      if (!response.ok) throw new Error('Failed to add comment.');
 
-    const responseData = await response.json(); // Parse response to get random author
-    alert(`Your comment has been posted as: ${responseData.author}`); // Optional: Notify user of assigned username
+      const responseData = await response.json(); // Parse response to get random author
+      alert(`Your comment has been posted as: ${responseData.author}`); // Optional: Notify user of assigned username
 
-    // Refresh comments and clear the input for the specific post
-    fetchComments(postId);
-    setNewComments((prev) => ({ ...prev, [postId]: '' }));
-  } catch (err) {
-    console.error('Error adding comment:', err);
-  }
-};
+      // Refresh comments and clear the input for the specific post
+      fetchComments(postId);
+      setNewComments((prev) => ({ ...prev, [postId]: '' }));
+    } catch (err) {
+      console.error('Error adding comment:', err);
+    }
+  };
+
+  // Share Post Functionality
+  const handleShare = (post) => {
+    const postUrl = `https://www.thestylishmama.com/posts/${post.id}`; // Dynamically created post URL in the desired format
+    
+    if (navigator.share) {
+      navigator.share({
+        title: post.title,
+        text: 'Check out this amazing post!',
+        url: postUrl, // Share the specific post's URL
+      })
+      .then(() => console.log('Post shared successfully'))
+      .catch((error) => console.error('Error sharing:', error));
+    } else {
+      navigator.clipboard.writeText(postUrl)
+        .then(() => alert('Link copied to clipboard!'))
+        .catch(() => alert('Failed to copy link.'));
+    }
+  };
 
   return (
     <div className="products-review-page">
@@ -169,43 +187,46 @@ const handleAddComment = async (postId) => {
                   />
                 )}
 
+                {/* Share Button */}
+                <button className="share-button" onClick={() => handleShare(post)}>
+                      <span className="share-icon">🔗</span> Share
+                    </button>
+
                 {/* Comments Section */}
                 <div className="comments-section">
-  <h3>Comments</h3>
-  <div className="comments-list">
-    {comments[post.id]?.length > 0 ? (
-      comments[post.id].map((comment) => (
-        <div key={comment.id} className="comment">
-          <p>
-            <strong>{comment.author}</strong>: {comment.content}
-          </p>
-          <p className="comment-date">
-            {new Date(comment.created_at).toLocaleString()}
-          </p>
-        </div>
-      ))
-    ) : (
-      <p>No comments yet. Be the first to comment!</p>
-    )}
-  </div>
+                  <h3>Comments</h3>
+                  <div className="comments-list">
+                    {comments[post.id]?.length > 0 ? (
+                      comments[post.id].map((comment) => (
+                        <div key={comment.id} className="comment">
+                          <p>
+                            <strong>{comment.author}</strong>: {comment.content}
+                          </p>
+                          <p className="comment-date">
+                            {new Date(comment.created_at).toLocaleString()}
+                          </p>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No comments yet. Be the first to comment!</p>
+                    )}
+                  </div>
 
-  {/* Add Comment */}
-  <div className="add-comment">
-    <textarea
-      placeholder="Share your thoughts..."
-      value={newComments[post.id] || ''}
-      onChange={(e) =>
-        setNewComments((prev) => ({
-          ...prev,
-          [post.id]: e.target.value,
-        }))
-      }
-    />
-    <button onClick={() => handleAddComment(post.id)}>Post Comment</button>
-  </div>
-</div>
-
-
+                  {/* Add Comment */}
+                  <div className="add-comment">
+                    <textarea
+                      placeholder="Share your thoughts..."
+                      value={newComments[post.id] || ''}
+                      onChange={(e) =>
+                        setNewComments((prev) => ({
+                          ...prev,
+                          [post.id]: e.target.value,
+                        }))
+                      }
+                    />
+                    <button onClick={() => handleAddComment(post.id)}>Post Comment</button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
