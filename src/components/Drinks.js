@@ -97,6 +97,25 @@ const Drinks = () => {
     setFilteredPosts(filtered);
   };
 
+  // Share functionality
+  const handleShare = (post) => {
+    const postUrl = `https://www.thestylishmama.com/posts/${post.id}`; // Dynamically created post URL in the desired format
+    
+    if (navigator.share) {
+      navigator.share({
+        title: post.title,
+        text: 'Check out this amazing post!',
+        url: postUrl, // Share the specific post's URL
+      })
+      .then(() => console.log('Post shared successfully'))
+      .catch((error) => console.error('Error sharing:', error));
+    } else {
+      navigator.clipboard.writeText(postUrl)
+        .then(() => alert('Link copied to clipboard!'))
+        .catch(() => alert('Failed to copy link.'));
+    }
+  };
+
   return (
     <div className="recipe-page">
       {loading ? (
@@ -156,6 +175,11 @@ const Drinks = () => {
                         className="recipe-page__image"
                       />
                     )}
+
+                    {/* Share Button */}
+                    <button className="share-button" onClick={() => handleShare(post)}>
+                      <span className="share-icon">🔗</span> Share
+                    </button>
                   </div>
                 ))}
               </div>
