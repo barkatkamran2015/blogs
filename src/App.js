@@ -24,7 +24,6 @@ import Food from "./components/Recipe";
 import Drinks from "./components/Drinks";
 import Dessert from "./components/Dessert"; 
 import ProductsReview from "./components/ProductsReview";
-import StyleAdvisor from "./components/StyleAdvisor"; 
 import PostDetailPage from "./components/PostDetailPage";  // New component for post details
 import { auth } from "./Admin/firebaseConfig";
 
@@ -82,7 +81,6 @@ const App = () => {
             <Route path="/dessert" element={<Dessert />} />
             <Route path="/products-review" element={<ProductsReview />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/style-advisor" element={<StyleAdvisor />} />
             <Route path="/login" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
 
