@@ -1,14 +1,27 @@
 {
   "redirects": [
+    // Force HTTP → HTTPS + non-www → www for ALL paths
+    {
+      "source": "/:path*",
+      "destination": "https://www.thestylishmama.com/:path*",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "(thestylishmama.com|www.thestylishmama.com)"
+        }
+      ]
+    },
   
     {
       "source": "/:path*",
       "destination": "https://www.thestylishmama.com/:path*",
       "permanent": true,
       "has": [
-        { 
-          "type": "host", 
-          "value": "(thestylishmama.com|www.thestylishmama.com)" 
+        {
+          "type": "header",
+          "key": "x-forwarded-proto",
+          "value": "http"
         }
       ]
     }
