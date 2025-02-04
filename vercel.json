@@ -1,6 +1,6 @@
 {
   "redirects": [
-    // Redirect HTTP → HTTPS and non-www → www
+  
     {
       "source": "/:path*",
       "destination": "https://www.thestylishmama.com/:path*",
