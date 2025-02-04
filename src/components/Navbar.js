@@ -92,7 +92,6 @@ const Navbar = () => {
     },
     { label: 'Blog', path: '/blog' },
     { label: 'Products Review', path: '/products-review' },
-    { label: 'A.I Style Advisor', path: '/style-advisor' },
     { label: 'Contact', path: '/contact' },
   ];
 
