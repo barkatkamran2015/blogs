@@ -15,6 +15,7 @@ const Blog = () => {
   const queryParams = new URLSearchParams(location.search);
   const postIdFromQuery = queryParams.get('id');
 
+  // Fetch all posts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -53,6 +54,7 @@ const Blog = () => {
     fetchPosts();
   }, [postIdFromQuery]);
 
+  // Handle search functionality
   const handleSearch = (searchTerm) => {
     if (!searchTerm.trim()) {
       setFilteredPosts(posts);
@@ -66,6 +68,7 @@ const Blog = () => {
     }
   };
 
+  // Increment view count for a post
   const incrementViewCount = async (postId) => {
     try {
       await fetch(`${API_URL}?method=INCREMENT_VIEW_COUNT&postId=${postId}`, {
@@ -77,23 +80,26 @@ const Blog = () => {
     }
   };
 
-  const handleShare = (post) => {
-    const postUrl = `${window.location.origin}/blog?id=${post.id}`;
-    
-    if (navigator.share) {
-      navigator.share({
-        title: post.title,
-        text: 'Check out this amazing blog post!',
-        url: postUrl,
-      })
-      .then(() => console.log('Post shared successfully'))
-      .catch((error) => console.error('Error sharing:', error));
-    } else {
-      navigator.clipboard.writeText(postUrl)
-        .then(() => alert('Link copied to clipboard!'))
-        .catch(() => alert('Failed to copy link.'));
-    }
-  };
+  // Handle share functionality
+  // Handle share functionality
+const handleShare = (post) => {
+  const postUrl = `https://www.thestylishmama.com/posts/${post.id}`; // Dynamically created post URL in the desired format
+  
+  if (navigator.share) {
+    navigator.share({
+      title: post.title,
+      text: 'Check out this amazing blog post!',
+      url: postUrl, // Share the specific post's URL
+    })
+    .then(() => console.log('Post shared successfully'))
+    .catch((error) => console.error('Error sharing:', error));
+  } else {
+    navigator.clipboard.writeText(postUrl)
+      .then(() => alert('Link copied to clipboard!'))
+      .catch(() => alert('Failed to copy link.'));
+  }
+};
+
 
   return (
     <div className="blog-page">
@@ -121,7 +127,9 @@ const Blog = () => {
                 id={`post-${post.id}`}
                 className="blog-page__card"
                 style={{ backgroundColor: post.backgroundColor || '#fafafa' }}
-                onMouseEnter={() => incrementViewCount(post.id)}
+                onMouseEnter={() => {
+                  incrementViewCount(post.id);
+                }}
               >
                 <h3
                   className="blog-page__title"
@@ -145,7 +153,12 @@ const Blog = () => {
                   />
                 )}
 
-                <button className="share-button" onClick={() => handleShare(post)}>
+                <p className="blog-page__meta">Views: {post.views || 0}</p>
+
+                <button
+                  className="share-button"
+                  onClick={() => handleShare(post)}
+                >
                   🔗 Share
                 </button>
               </div>
