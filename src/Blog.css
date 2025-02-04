@@ -132,6 +132,35 @@ body {
   left: 25px;
 }
 
+.share-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.share-button:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .share-button {
+    width: auto;
+    padding: 8px 12px;
+  }
+}
+
+
 /* View Count Styling */
 .blog-page__meta {
   font-size: 0.9rem;
