@@ -1,19 +1,18 @@
 User-agent: *
-Allow: /
-Crawl-delay: 5
+Allow: /$
 
 # Sensitive areas
-Disallow: /customer_identity
-Disallow: /admindashboard
-Disallow: /adminpanel
-Disallow: /posteditor
-Disallow: /login
-Disallow: /signup
+Disallow: /customer_identity/
+Disallow: /admindashboard/
+Disallow: /adminpanel/
+Disallow: /posteditor/
+Disallow: /login/
+Disallow: /signup/
 
 # Parameter handling
-Disallow: /*?utm_
-Disallow: /*?sessionid=
-Disallow: /*?token=
+Disallow: /*?*utm_
+Disallow: /*?*sessionid=
+Disallow: /*?*token=
 
-# Sitemap
+# Sitemap declaration
 Sitemap: https://www.thestylishmama.com/sitemap.xml
