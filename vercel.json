@@ -1,4 +1,18 @@
 {
+  "redirects": [
+    // Redirect HTTP → HTTPS and non-www → www
+    {
+      "source": "/:path*",
+      "destination": "https://www.thestylishmama.com/:path*",
+      "permanent": true,
+      "has": [
+        { 
+          "type": "host", 
+          "value": "(thestylishmama.com|www.thestylishmama.com)" 
+        }
+      ]
+    }
+  ],
   "headers": [
     {
       "source": "/sitemap.xml",
