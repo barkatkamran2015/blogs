@@ -2,55 +2,56 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import '../PostDetailPage.css';
 
+// Helper function to validate color
+const isValidColor = (color) => {
+  const style = new Option().style;
+  style.backgroundColor = color;
+  return style.backgroundColor !== '';
+};
 
 const PostDetailPage = () => {
-  const { id } = useParams(); // Get post ID from URL
-  const postId = Number(id) || parseInt(id, 10); // Ensure it's a valid number
-
+  const { id } = useParams();
+  const postId = Number(id);
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!postId) {
-      setError('Invalid post ID.');
+    if (!postId || isNaN(postId)) {
+      setError('Invalid post ID');
       setLoading(false);
       return;
     }
 
-    const controller = new AbortController(); // Create an abort controller for cleanup
+    const controller = new AbortController();
 
     const fetchPost = async () => {
       try {
-        const response = await fetch(`https://www.barkatkamran.com/db.php?method=GET_POST&id=${postId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          signal: controller.signal, // Attach the abort signal
-        });
-
-        if (!response.ok) {
-          if (response.status === 404) {
-            throw new Error('Post not found.');
+        const response = await fetch(
+          `https://www.barkatkamran.com/db.php?method=GET_POST&id=${postId}`,
+          {
+            signal: controller.signal,
+            headers: {
+              'Content-Type': 'application/json',
+            },
           }
-          if (response.status === 500) {
-            throw new Error('Server error. Please try again later.');
-          }
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
-        }
+        );
 
-        const contentType = response.headers.get("Content-Type");
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new Error("Expected JSON, but received something else.");
-        }
-
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
         const data = await response.json();
+        
+        // Validate background color
+        if (data.backgroundColor && !isValidColor(data.backgroundColor)) {
+          console.warn(`Invalid background color: ${data.backgroundColor}`);
+          delete data.backgroundColor;
+        }
+
         setPost(data);
       } catch (err) {
-        if (err.name === 'AbortError') return; // Ignore aborted requests
-        console.error('Fetch error:', err);
-        setError(err.message);
+        if (err.name !== 'AbortError') {
+          setError(err.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -58,30 +59,26 @@ const PostDetailPage = () => {
 
     fetchPost();
 
-    return () => controller.abort(); // Cleanup: Abort fetch on unmount
+    return () => controller.abort();
   }, [postId]);
+
+  const backgroundColor = post?.backgroundColor || '#fafafa';
 
   if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">Error: {error}</div>;
 
   return (
-    <div className="post-detail-container">
-      {post ? (
-        <>
-          <h1>{post.title}</h1>
-          <div dangerouslySetInnerHTML={{ __html: post.content }} />
-          <img 
-            src={post.imageUrl || 'https://via.placeholder.com/150'} 
-            alt={post.title || 'Post Image'} 
-          />
-          <p>Posted on: {new Date(post.created_at).toLocaleDateString()}</p>
-        </>
-      ) : (
-        <p className="post-not-found">Post not found.</p>
-      )}
+    <div 
+      className="post-detail-container" 
+      style={{ 
+        backgroundColor,
+        // Ensure fallback works with CSS variables
+        '--bg-color': isValidColor(backgroundColor) ? backgroundColor : '#fafafa'
+      }}
+    >
+      {/* ... rest of your component ... */}
     </div>
   );
 };
-
 
 export default PostDetailPage;
