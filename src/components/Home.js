@@ -9,6 +9,9 @@ import 'slick-carousel/slick/slick-theme.css';
 import imageBlog from '../assets/kitchen.jpeg';
 import imageNature from '../assets/parenting.jpeg';
 import imageRecipe from '../assets/bedroom.jpeg';
+import imageGarden from '../assets/garden.JPG';
+import imageFall from '../assets/fall.jpg';
+import imageTulip from '../assets/tulip.JPEG';
 
 const API_URL = 'https://barkatkamran.com/db.php';
 
@@ -100,6 +103,18 @@ const Home = () => {
             <div>
               <img src={imageRecipe} alt="Recipe" className="home-page__slider-image" />
               <h3 className="home-page__slider-text">Healthy Recipe Ideas</h3>
+            </div>
+            <div>
+              <img src={imageGarden} alt="Garden" className="home-page__slider-image" />
+              <h3 className="home-page__slider-text">Garden Visit</h3>
+            </div>
+            <div>
+              <img src={imageTulip} alt="Tulip" className="home-page__slider-image" />
+              <h3 className="home-page__slider-text">Tulip Festival</h3>
+            </div>
+            <div>
+              <img src={imageFall} alt="Fall" className="home-page__slider-image" />
+              <h3 className="home-page__slider-text">Fall Season</h3>
             </div>
           </Slider>
 
