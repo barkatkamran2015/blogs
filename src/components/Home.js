@@ -106,15 +106,15 @@ const Home = () => {
             </div>
             <div>
               <img src={imageGarden} alt="Garden" className="home-page__slider-image" />
-              <h3 className="home-page__slider-text">Garden Visit</h3>
+              <h3 className="home-page__slider-text">Butcher Garden Visit</h3>
             </div>
             <div>
               <img src={imageTulip} alt="Tulip" className="home-page__slider-image" />
-              <h3 className="home-page__slider-text">Tulip Festival</h3>
+              <h3 className="home-page__slider-text">Tulip Festival BC</h3>
             </div>
             <div>
               <img src={imageFall} alt="Fall" className="home-page__slider-image" />
-              <h3 className="home-page__slider-text">Fall Season</h3>
+              <h3 className="home-page__slider-text">Beautiful Fall Season</h3>
             </div>
           </Slider>
 
