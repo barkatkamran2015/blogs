@@ -1,5 +1,4 @@
 User-agent: *
-Allow: /$
 
 # Sensitive areas
 Disallow: /customer_identity/
@@ -8,11 +7,6 @@ Disallow: /adminpanel/
 Disallow: /posteditor/
 Disallow: /login/
 Disallow: /signup/
-
-# Parameter handling
-Disallow: /*?*utm_
-Disallow: /*?*sessionid=
-Disallow: /*?*token=
 
 # Sitemap declaration
 Sitemap: https://www.thestylishmama.com/sitemap.xml
