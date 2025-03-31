@@ -13,6 +13,7 @@ import imageGarden from '../assets/garden.JPG';
 import imageFall from '../assets/fall.jpg';
 import imageTulip from '../assets/tulip.JPEG';
 
+// Update this URL to your actual backend domain
 const API_URL = 'https://barkatkamran.com/db.php';
 
 const Home = () => {
@@ -20,6 +21,7 @@ const Home = () => {
   const [filteredPosts, setFilteredPosts] = useState([]); // Search results
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(''); // Error state
+  const [retryCount, setRetryCount] = useState(0); // Retry counter
 
   // Page paths for redirection
   const pagePaths = {
@@ -30,9 +32,9 @@ const Home = () => {
     'Products Review': '/products-review',
   };
 
-  // Fetch posts on component mount
+  // Fetch posts with retry mechanism
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchPosts = async (attempt = 1) => {
       try {
         setLoading(true);
         const response = await fetch(`${API_URL}?method=GET`);
@@ -51,11 +53,22 @@ const Home = () => {
         console.log('Fetched and Formatted Posts:', formattedPosts); // Debugging
         setPosts(formattedPosts);
         setFilteredPosts(formattedPosts);
+        setError(''); // Clear any previous errors
       } catch (err) {
-        console.error('Error fetching posts:', err);
-        setError('Failed to load posts. Please try again.');
+        console.error('Error fetching posts (attempt ' + attempt + '):', err);
+        if (attempt < 3) {
+          // Retry up to 3 times
+          setTimeout(() => {
+            setRetryCount(attempt);
+            fetchPosts(attempt + 1);
+          }, 2000 * attempt); // Exponential backoff: 2s, 4s, 6s
+        } else {
+          setError('Failed to load posts after multiple attempts. Please check your connection and try again later.');
+        }
       } finally {
-        setLoading(false);
+        if (attempt >= 3 || !error) {
+          setLoading(false);
+        }
       }
     };
     fetchPosts();
@@ -85,6 +98,9 @@ const Home = () => {
       {loading ? (
         <div className="loading-container">
           <div className="heart-loader"></div>
+          {retryCount > 0 && (
+            <p>Retrying... (Attempt {retryCount + 1} of 3)</p>
+          )}
         </div>
       ) : error ? (
         <p className="home-page__error-message">{error}</p>
@@ -159,11 +175,11 @@ const Home = () => {
 
                     {/* Display Post Date */}
                     {post.date ? (
-                    <p className="home-page__post-date">
-                    Posted on: {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                    </p>
+                      <p className="home-page__post-date">
+                        Posted on: {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                      </p>
                     ) : (
-                    <p className="home-page__post-date">Date not available</p>
+                      <p className="home-page__post-date">Date not available</p>
                     )}
 
                     <div
