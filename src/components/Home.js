@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import '../Home.css';
-import SearchBar from '../components/SearchBar';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -13,15 +12,12 @@ import imageGarden from '../assets/garden.JPG';
 import imageFall from '../assets/fall.jpg';
 import imageTulip from '../assets/tulip.JPEG';
 
-// Update this URL to your actual backend domain
 const API_URL = 'https://barkatkamran.com/db.php';
 
 const Home = () => {
-  const [posts, setPosts] = useState([]); // All fetched posts
-  const [filteredPosts, setFilteredPosts] = useState([]); // Search results
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(''); // Error state
-  const [retryCount, setRetryCount] = useState(0); // Retry counter
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   // Page paths for redirection
   const pagePaths = {
@@ -32,12 +28,12 @@ const Home = () => {
     'Products Review': '/products-review',
   };
 
-  // Fetch posts with retry mechanism
+  // Fetch all posts on component mount
   useEffect(() => {
-    const fetchPosts = async (attempt = 1) => {
+    const fetchPosts = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_URL}?method=GET`);
+        const response = await fetch(API_URL); // Simplified to a basic GET request
         if (!response.ok) throw new Error('Failed to fetch posts');
 
         const data = await response.json();
@@ -46,49 +42,26 @@ const Home = () => {
         const formattedPosts = data.map((post) => ({
           ...post,
           titleStyle: post.titleStyle
-            ? JSON.parse(post.titleStyle) // Parse JSON if titleStyle is a string
-            : { color: '#000', fontSize: '1.8rem', textAlign: 'left' }, // Default style
+            ? JSON.parse(post.titleStyle)
+            : { color: '#000', fontSize: '1.8rem', textAlign: 'left' },
         }));
 
-        console.log('Fetched and Formatted Posts:', formattedPosts); // Debugging
+        console.log('Fetched and Formatted Posts:', formattedPosts);
         setPosts(formattedPosts);
-        setFilteredPosts(formattedPosts);
-        setError(''); // Clear any previous errors
       } catch (err) {
-        console.error('Error fetching posts (attempt ' + attempt + '):', err);
-        if (attempt < 3) {
-          // Retry up to 3 times
-          setTimeout(() => {
-            setRetryCount(attempt);
-            fetchPosts(attempt + 1);
-          }, 2000 * attempt); // Exponential backoff: 2s, 4s, 6s
-        } else {
-          setError('Failed to load posts after multiple attempts. Please check your connection and try again later.');
-        }
+        console.error('Error fetching posts:', err);
+        setError('Failed to load posts. Please try again.');
       } finally {
-        if (attempt >= 3 || !error) {
-          setLoading(false);
-        }
+        setLoading(false);
       }
     };
     fetchPosts();
   }, []);
 
-  // Handle search functionality
-  const handleSearch = (query) => {
-    const lowerCaseQuery = query.toLowerCase();
-    const results = posts.filter(
-      (post) =>
-        post.title.toLowerCase().includes(lowerCaseQuery) ||
-        (post.content && post.content.toLowerCase().includes(lowerCaseQuery))
-    );
-    setFilteredPosts(results);
-  };
-
   // Navigate to specific page (with postId)
   const navigateToPost = (page, postId) => {
     const basePath = pagePaths[page] || '/';
-    const targetPath = `${basePath}?id=${postId}`; // Include postId in query parameter
+    const targetPath = `${basePath}?id=${postId}`;
     window.location.href = targetPath;
   };
 
@@ -98,9 +71,6 @@ const Home = () => {
       {loading ? (
         <div className="loading-container">
           <div className="heart-loader"></div>
-          {retryCount > 0 && (
-            <p>Retrying... (Attempt {retryCount + 1} of 3)</p>
-          )}
         </div>
       ) : error ? (
         <p className="home-page__error-message">{error}</p>
@@ -134,18 +104,12 @@ const Home = () => {
             </div>
           </Slider>
 
-          {/* Search Bar */}
-          <SearchBar
-            onSearch={handleSearch}
-            placeholder="Search for blogs, reviews, or recipes..."
-          />
-
           {/* Posts Section */}
           <div className="home-page__posts-container">
-            {filteredPosts.length === 0 ? (
+            {posts.length === 0 ? (
               <p>No posts available</p>
             ) : (
-              filteredPosts.map((post) => (
+              posts.map((post) => (
                 <div
                   key={post.id}
                   className="home-page__post-item"
@@ -185,13 +149,13 @@ const Home = () => {
                     <div
                       className="home-page__post-excerpt"
                       dangerouslySetInnerHTML={{
-                        __html: post.content.slice(0, 350) + '...',
+                        __html: post.content ? post.content.slice(0, 350) + '...' : 'No content available',
                       }}
                     />
                     {/* Read More Button */}
                     <button
                       className="home-page__cta-button"
-                      onClick={() => navigateToPost(post.page, post.id)} // Include post ID for navigation
+                      onClick={() => navigateToPost(post.page, post.id)}
                     >
                       Read More
                     </button>
